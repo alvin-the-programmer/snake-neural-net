@@ -59,7 +59,7 @@ class Snake {
   }
 
   isSelfCollision(pos) {
-    const selfPositions = new Set(this.positions.map(String));
+    const selfPositions = new Set(this.positions.slice(0, -1).map(String)); // clutch move
     return selfPositions.has(String(pos));
   }
 
