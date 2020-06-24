@@ -1,4 +1,13 @@
-const { WIDTH, HEIGHT, ALPHA, SNAKE_START_POS, GameOver } = require('./constants');
+const { 
+  WIDTH, 
+  HEIGHT, 
+  ALPHA, 
+  SNAKE_START_POS, 
+  START_FITNESS,
+  MAX_FITNESS,
+  GameOver 
+} = require('./constants');
+
 const Snake = require('./Snake');
 
 class Board {
@@ -7,6 +16,7 @@ class Board {
     this.snake = new Snake(SNAKE_START_POS);
     this.foodPos = [ 5, 13 ];
     this.fillGrid();
+    this.fitness = START_FITNESS;
   }
 
   static allPositions() {
@@ -51,14 +61,19 @@ class Board {
     this.grid.forEach((row, rowIndex) => {
       console.log(ALPHA[rowIndex] + row.join('|'));
     });
+
+    console.log('fitness:', this.fitness + '/' + MAX_FITNESS);
   }
 
   simulate() {
+    this.fitness--;
     try {
-      if (this.snake.move(this.foodPos))
+      if (this.snake.move(this.foodPos)) {
+        this.fitness = Math.min(this.fitness + 51, MAX_FITNESS);
         this.placeRandomFood();
+      }
     } catch (error) {
-      if (error instanceof GameOver) {
+      if (error instanceof GameOver || this.fitness === 0) {
         console.log('GAME OVER!');
         process.exit();
       } else {
