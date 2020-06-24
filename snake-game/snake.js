@@ -35,13 +35,22 @@ class Snake {
     
   }
 
-  move(grow = false) {
+  move(foodPos) {
     const [ head, ...body ] = this.positions;
     const [ headRow, headCol ] = head;
     const newHeadPos = [ headRow + this.direction.y, headCol + this.direction.x ];
-    if (this.isCollision(newHeadPos)) throw new GameOver(); 
-    this.positions.pop();
-    this.positions.unshift(newHeadPos);
+
+    if (this.isCollision(newHeadPos))
+      throw new GameOver(); 
+    
+    this.positions.unshift(newHeadPos); 
+      
+    if (String(newHeadPos) === String(foodPos)) {
+      return true;
+    } else {
+      this.positions.pop();
+      return false;
+    }
   }
 
   isWallCollision(pos) {
