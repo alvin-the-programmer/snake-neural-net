@@ -3,7 +3,7 @@ const {
   HEIGHT, 
   ALPHA, 
   SNAKE_START_POS, 
-  START_FITNESS,
+  START_HEALTH,
   MAX_FITNESS,
   GameOver 
 } = require('./constants');
@@ -14,9 +14,11 @@ class Board {
   constructor() {
     this.grid = new Array(HEIGHT).fill().map(() => new Array(WIDTH));
     this.snake = new Snake(SNAKE_START_POS);
-    this.foodPos = [ 5, 13 ];
+    this.foodPos = [ 10, 13 ];
     this.fillGrid();
-    this.fitness = START_FITNESS;
+    this.health = START_HEALTH;
+    this.fitness = 0;
+    this.food_score = 0;
   }
 
   static allPositions() {
@@ -62,18 +64,22 @@ class Board {
       console.log(ALPHA[rowIndex] + row.join('|'));
     });
 
-    console.log('fitness:', this.fitness + '/' + MAX_FITNESS);
+    console.log('health:', this.health + '/' + MAX_FITNESS);
+    console.log('fitness:', this.fitness);
+    console.log('food_score:', this.food_score);
   }
 
   simulate() {
-    this.fitness--;
+    this.health--;
+    this.fitness++;
     try {
       if (this.snake.move(this.foodPos)) {
-        this.fitness = Math.min(this.fitness + 51, MAX_FITNESS);
+        this.food_score++;
+        this.health = Math.min(this.health + 51, MAX_FITNESS);
         this.placeRandomFood();
       }
     } catch (error) {
-      if (error instanceof GameOver || this.fitness === 0) {
+      if (error instanceof GameOver || this.health === 0) {
         console.log('GAME OVER!');
         process.exit();
       } else {

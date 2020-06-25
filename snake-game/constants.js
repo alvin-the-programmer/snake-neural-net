@@ -2,7 +2,7 @@ const WIDTH = 20;
 const HEIGHT = 20;
 const ALPHA = 'abcdefghijklmnopqrst';
 const SNAKE_START_POS = [ 5, 5 ];
-const START_FITNESS = 50;
+const START_HEALTH = 50;
 const MAX_FITNESS = 400;
 
 class GameOver extends Error {
@@ -17,7 +17,7 @@ module.exports = {
   HEIGHT,
   ALPHA,
   SNAKE_START_POS,
-  START_FITNESS,
+  START_HEALTH,
   MAX_FITNESS,
   GameOver
 };

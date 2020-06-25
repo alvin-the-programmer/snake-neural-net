@@ -31,10 +31,6 @@ class Snake {
     this.direction = { x: 1, y: 0 };
   }
 
-  grow() {
-    
-  }
-
   move(foodPos) {
     const [ head, ...body ] = this.positions;
     const [ headRow, headCol ] = head;
