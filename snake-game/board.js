@@ -37,10 +37,15 @@ class Board {
   }
 
   getState() {
-    let [ head, ...body ] = this.snake.positions;
-    // Board.allPositions().
+    let [ snakeHeadEnum, ...snakeBodyEnums ] = this.snake.positions.map(Board.positionToEnum);
+    let foodEnum = Board.positionToEnum(this.foodPos); 
+    const state = {};
+    Board.allPositions().map(Board.positionToEnum).forEach(posEnum => state[posEnum] = 0);
+    snakeBodyEnums.forEach(posEnum => state[posEnum] = 1);
+    state[snakeHeadEnum] = 2;
+    state[foodEnum] = 3;
+    return state;
   }
-
 
   availablePositions() {
     const snakePositions = new Set(this.snake.positions.map(String));
@@ -116,8 +121,7 @@ class Board {
         this.snake.down();
       if (key === 'd')
         this.snake.right();
-
-      this.simulate()
+        this.simulate()
     });
   }
 };
