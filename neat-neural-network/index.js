@@ -16,3 +16,14 @@ class Neuron {
     return sigmoid(weightedSum + this.bias);
   }
 }
+
+// Neural Network
+//    - Inputs search space = ~2^400 * 400 * 400
+//      - 20x20 grid = 400 bool-pixels = 2^(400) possibilities
+//      - food position = 400 possibilities
+//      - head position = 400 possibilities
+//    - Outputs = 4
+//      - up
+//      - down
+//      - left
+//      - right

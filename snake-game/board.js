@@ -22,7 +22,7 @@ class Board {
   }
 
   static allPositions() {
-    const positions = []
+    const positions = [];
     for (let i = 0; i < HEIGHT; i++) {
       for (let j = 0; j < WIDTH; j++) {
         positions.push([ i, j ]);
@@ -30,6 +30,17 @@ class Board {
     }
     return positions;
   }
+
+  static positionToEnum(pos) {
+    const [ row, col ] = pos;
+    return row * WIDTH + col;
+  }
+
+  getState() {
+    let [ head, ...body ] = this.snake.positions;
+    // Board.allPositions().
+  }
+
 
   availablePositions() {
     const snakePositions = new Set(this.snake.positions.map(String));
