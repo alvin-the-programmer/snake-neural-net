@@ -26,8 +26,8 @@ class Genome {
     this.nodes.input.forEach(nodeA => {
       this.nodes.output.forEach(nodeB => {
         const edgeId = Genome.edgeId(nodeA, nodeB);
-        Genome.innovations[edgeId] = Genome.getNextInnovationNumber();
-        this.connections[edgeId] = { weight: getRandom(-2, 2), enabled:  true };
+        Genome.innovations[edgeId] = Genome.upgradeInnovationNumber();
+        this.connections[edgeId] = { weight: getRandom(-1, 1), enabled:  true };
       });
     });
   }
@@ -36,7 +36,7 @@ class Genome {
     return node1 + ',' + node2;
   }
 
-  static getNextInnovationNumber() {
+  static upgradeInnovationNumber() {
     return ++Genome.innovationNumber;
   }
 
@@ -44,16 +44,8 @@ class Genome {
     return Object.values(this.nodes).reduce((all , array) => [ ...all, ...array ]);
   }
 
-  addConnectionMutation() {
-    const newEdgeId = getRandomElement(this.getNewEdgeCandidates());
-
-    if (!newEdgeId)
-      return null;
-
-    this.connections[newEdgeId] = { weight: getRandom(-2, 2), enabled: true };
-    
-    if (!(newEdgeId in Genome.innovations))
-      Genome.innovations[newEdgeId] = Genome.getNextInnovationNumber();
+  getExistingEdges() {
+    return Object.keys(this.connections);
   }
 
   getNewEdgeCandidates() {
@@ -71,8 +63,30 @@ class Genome {
     return candidates;
   }
 
+  addConnectionMutation() {
+    const newEdgeId = getRandomElement(this.getNewEdgeCandidates());
+
+    if (!newEdgeId)
+      return null;
+
+    this.connections[newEdgeId] = { weight: getRandom(-1, 1), enabled: true };
+
+    if (!(newEdgeId in Genome.innovations))
+      Genome.innovations[newEdgeId] = Genome.upgradeInnovationNumber();
+  }
+
   addNodeMutation() {
-    // TODO
+    const oldEdgeId = randomElement(this.getExistingEdges());
+    const [ src, dst ] = oldEdgeId.split(',');
+    const newNode = this.getNodes().length + 1;
+    this.nodes.hidden.push(newNode);
+    const srcToNewEdgeId = Genome.edgeId(src, newNode);
+    const newToDstEdgeId = Genome.edgeId(newNode, dst);
+    Genome.innovations[srcToNewEdgeId] = Genome.upgradeInnovationNumber();
+    Genome.innovations[newToDstEdgeId] = Genome.upgradeInnovationNumber();
+    this.connections[srcToNewEdge] = { weight: 1, enabled: true };
+    this.connections[newToDstEdge] = { weight: this.connections[oldEdgeId].weight, enabled: true };
+    this.connections[oldEdgeId].enabled = false;
   }
 }
 
