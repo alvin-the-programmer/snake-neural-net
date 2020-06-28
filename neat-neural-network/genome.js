@@ -76,7 +76,7 @@ class Genome {
   }
 
   addNodeMutation() {
-    const oldEdgeId = randomElement(this.getExistingEdges());
+    const oldEdgeId = getRandomElement(this.getExistingEdges());
     const [ src, dst ] = oldEdgeId.split(',');
     const newNode = this.getNodes().length + 1;
     this.nodes.hidden.push(newNode);
@@ -84,17 +84,23 @@ class Genome {
     const newToDstEdgeId = Genome.edgeId(newNode, dst);
     Genome.innovations[srcToNewEdgeId] = Genome.upgradeInnovationNumber();
     Genome.innovations[newToDstEdgeId] = Genome.upgradeInnovationNumber();
-    this.connections[srcToNewEdge] = { weight: 1, enabled: true };
-    this.connections[newToDstEdge] = { weight: this.connections[oldEdgeId].weight, enabled: true };
+    this.connections[srcToNewEdgeId] = { weight: 1, enabled: true };
+    this.connections[newToDstEdgeId] = { weight: this.connections[oldEdgeId].weight, enabled: true };
     this.connections[oldEdgeId].enabled = false;
   }
 }
 
 
-const g = new Genome({ numInputs: NUM_INPUTS, numOutputs: NUM_OUTPUTS });
-// console.log(Object.keys(g.connections).length);
-// console.log(g.getNewEdgeCandidates());
-// console.log(Genome.innovations);
-// console.log(Genome.innovationNumber);
+// const g = new Genome({ numInputs: NUM_INPUTS, numOutputs: NUM_OUTPUTS });
 
-console.log(getRandomElement([2, 3]));
+const g = new Genome({ numInputs: 2, numOutputs: 2 });
+console.log(g);
+console.log(Genome.innovations);
+g.addConnectionMutation();
+console.log('------ mutate connection');
+console.log(g);
+console.log(Genome.innovations);
+g.addNodeMutation();
+console.log('------ mutate node');
+console.log(g);
+console.log(Genome.innovations);
