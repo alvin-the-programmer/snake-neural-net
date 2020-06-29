@@ -8,8 +8,10 @@ const getRandomElement = array => array[Math.floor(getRandom(0, array.length))];
 
 class Genome {
   static innovationNumber = 0;
-  
-  constructor({ numInputs, numOutputs }) {
+
+  constructor(nonHiddenLayers = { numInputs: 0, numOutputs: 0 }) {
+    const { numInputs, numOutputs } = nonHiddenLayers;
+
     this.nodes = {
       input: [],
       output: [],
@@ -45,11 +47,28 @@ class Genome {
   }
 
   static crossover({ genomeA, genomeB, fitnessA, fitnessB }) {
-    const match = genomeA.inn
+    const match = genomeA.inn // TODO
     console.log(genomeA.getInnovations().join(','));
     console.log(genomeB.getInnovations().join(','));
   }
 
+  static clone(parentGenome, numClones) {
+    let clones = [];
+
+    for (let i = 0; i < numClones; i++) {
+      const childGenome = new Genome();
+  
+      for (let nodeType in parentGenome.nodes) 
+        childGenome.nodes[nodeType] = parentGenome.nodes[nodeType].slice();
+  
+      for (let edge in parentGenome.connections)
+        childGenome.connections[edge] = { ...parentGenome.connections[edge] };
+  
+      clones.push(childGenome);
+    }
+
+    return clones;
+  }
 
   getNodes() {
     return Object.values(this.nodes).reduce((all , array) => [ ...all, ...array ]);
@@ -123,16 +142,22 @@ const g1 = new Genome({ numInputs: 2, numOutputs: 2 });
 g1.addConnectionMutation();
 g1.addConnectionMutation();
 g1.addNodeMutation();
+// console.log(g1);
+
+// const g2 = new Genome({ numInputs: 2, numOutputs: 2 });
+// g2.addConnectionMutation();
+// g2.addConnectionMutation();
+// g2.addNodeMutation();
+// console.log(g2);
+
+// console.log(g1.getInnovations());
+// console.log(g2.getInnovations());
+
 console.log(g1);
+const clones = Genome.clone(g1, 2);
+console.log(clones[0]);
+console.log(clones[1]);
 
-const g2 = new Genome({ numInputs: 2, numOutputs: 2 });
-g2.addConnectionMutation();
-g2.addConnectionMutation();
-g2.addNodeMutation();
-console.log(g2);
-
-console.log(g1.getInnovations());
-console.log(g2.getInnovations());
 
 
 // Genome.crossover({genomeA: g1, genomeB: g2});
