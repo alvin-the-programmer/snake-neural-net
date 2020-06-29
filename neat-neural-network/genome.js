@@ -47,9 +47,42 @@ class Genome {
   }
 
   static crossover({ genomeA, genomeB, fitnessA, fitnessB }) {
-    const match = genomeA.inn // TODO
-    console.log(genomeA.getInnovations().join(','));
-    console.log(genomeB.getInnovations().join(','));
+    // TODO
+  }
+
+  static compareInnovations(genomeA, genomeB) {
+    const setA = new Set(genomeA.getInnovations());
+    const setB = new Set(genomeB.getInnovations());
+    const rangeA = { min: Math.min(...setA), max: Math.max(...setA) };
+    const rangeB = { min: Math.min(...setB), max: Math.max(...setB) };
+
+    const neutralMatch = new Set();
+    const disjointA = new Set();
+    const disjointB = new Set();
+    const excessA = new Set();
+    const excessB = new Set();
+
+    for (let innovation of setA) {
+      if (setB.has(innovation)) {
+        neutralMatch.add(innovation);
+      } else if (rangeB.min < innovation && innovation < rangeB.max){
+        disjointA.add(innovation);
+      } else {
+        excessA.add(innovation);
+      }
+    }
+
+    for (let innovation of setB) {
+      if (setA.has(innovation)) {
+        neutralMatch.add(innovation);
+      } else if (rangeA.min < innovation && innovation < rangeA.max){
+        disjointB.add(innovation);
+      } else {
+        excessB.add(innovation);
+      }
+    }
+
+    return { neutralMatch, disjointA, disjointB, excessA, excessB };
   }
 
   static clone(parentGenome, numClones) {
@@ -79,8 +112,7 @@ class Genome {
   }
 
   getInnovations() {
-    return Object.values(this.connections)
-      .map(connection => connection.innovation).sort((a, b) => a - b);
+    return Object.values(this.connections).map(connection => connection.innovation);
   }
 
   getNewEdgeCandidates() {
@@ -135,29 +167,32 @@ class Genome {
   }
 }
 
-
-// const g = new Genome({ numInputs: NUM_INPUTS, numOutputs: NUM_OUTPUTS });
-
 const g1 = new Genome({ numInputs: 2, numOutputs: 2 });
-g1.addConnectionMutation();
-g1.addConnectionMutation();
-g1.addNodeMutation();
+g1.connections = {
+  'g1a': { innovation: 1 },
+  'g1b': { innovation: 2 },
+  'g1c': { innovation: 3 },
+  'g1d': { innovation: 4 },
+  'g1e': { innovation: 5 },
+  'g1f': { innovation: 8 },
+}
+
+
+const g2 = new Genome({ numInputs: 2, numOutputs: 2 });
+g2.connections = {
+  'g2a': { innovation: 1 },
+  'g2b': { innovation: 2 },
+  'g2c': { innovation: 3 },
+  'g2d': { innovation: 4 },
+  'g2e': { innovation: 5 },
+  'g2f': { innovation: 6 },
+  'g2g': { innovation: 7 },
+  'g2h': { innovation: 9 },
+  'g2i': { innovation: 10 },
+
+}
+
+
 // console.log(g1);
-
-// const g2 = new Genome({ numInputs: 2, numOutputs: 2 });
-// g2.addConnectionMutation();
-// g2.addConnectionMutation();
-// g2.addNodeMutation();
 // console.log(g2);
-
-// console.log(g1.getInnovations());
-// console.log(g2.getInnovations());
-
-console.log(g1);
-const clones = Genome.clone(g1, 2);
-console.log(clones[0]);
-console.log(clones[1]);
-
-
-
-// Genome.crossover({genomeA: g1, genomeB: g2});
+console.log(Genome.compareInnovations(g1, g2));
