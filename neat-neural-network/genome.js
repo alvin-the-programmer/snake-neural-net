@@ -19,6 +19,7 @@ class Genome {
     };
 
     this.connections = {};
+    this.innovations = {};
 
     for (let i = 1; i <= numInputs; i++) this.nodes.input.push(i);
 
@@ -27,11 +28,13 @@ class Genome {
     this.nodes.input.forEach((nodeA) => {
       this.nodes.output.forEach((nodeB) => {
         const edgeId = Genome.edgeId(nodeA, nodeB);
+        const innovation = Genome.upgradeInnovationNumber();
         this.connections[edgeId] = {
-          innovation: Genome.upgradeInnovationNumber(),
+          innovation,
           weight: getRandom(-1, 1),
           enabled: true,
         };
+        this.innovations[innovation] = edgeId;
       });
     });
   }
@@ -55,19 +58,36 @@ class Genome {
 
     const offspringGenome = Genome.makeNodeUnionOffspring(genomeA, genomeB);
 
-    const inheritSetA = new Set(inheritanceA);
-    for (let [edgeId, connection] of Object.entries(genomeA.connections)) {
-      if (inheritSetA.has(connection.innovation))
-        offspringGenome.connections[edgeId] = { ...connection  };
-    }
+    inheritanceA.forEach(gene => {
+      const edge = genomeA.innovations[gene];
+      offspringGenome.innovations[gene] = edge;
+      offspringGenome.connections[edge] = { ...genomeA.connections[edge] };
+    });
 
-    const inheritSetB = new Set(inheritanceB);
-    for (let [edgeId, connection] of Object.entries(genomeB.connections)) {
-      if (inheritSetB.has(connection.innovation))
-        offspringGenome.connections[edgeId] = { ...connection  };
-    }
+    inheritanceB.forEach(gene => {
+      const edge = genomeB.innovations[gene];
+      offspringGenome.innovations[gene] = edge;
+      offspringGenome.connections[edge] = { ...genomeB.connections[edge] };
+    });
 
     return offspringGenome;
+  }
+
+  static delta(genomeA, genomeB) {
+    const { intersection, disjointA, disjointB, excessA, excessB } = Genome.compareInnovations(genomeA, genomeB);
+    const numberExcess = excessA.length + excessB.length;
+    const numberDisjoint = disjointA.length + disjointB.length;
+
+    // intersection weighted avg diff
+    const weightDiffTotal = intersection.reduce((sum, gene) => {
+      const edgeA = genomeA.innovations[gene];
+      const edgeB = genomeB.innovations[gene];
+      const weightA = genomeA.connections[edgeA].weight;
+      const weightB = genomeB.connections[edgeB].weight;
+      return sum + Math.abs(weightA - weightB);
+    }, 0);
+
+    const averageWeightDiff = weightDiffTotal / intersection.length;
   }
 
   static compareInnovations(genomeA, genomeB) {
@@ -175,11 +195,13 @@ class Genome {
 
     if (!newEdgeId) return null;
 
+    const innovation = Genome.upgradeInnovationNumber();
     this.connections[newEdgeId] = {
-      innovation: Genome.upgradeInnovationNumber(),
+      innovation,
       weight: getRandom(-1, 1),
       enabled: true,
     };
+    this.innovations[innovation] = newEdgeId;
   }
 
   addNodeMutation() {
@@ -192,17 +214,21 @@ class Genome {
 
     this.connections[oldEdgeId].enabled = false;
 
+    const innovation1 = Genome.upgradeInnovationNumber();
     this.connections[srcToNewEdgeId] = {
-      innovation: Genome.upgradeInnovationNumber(),
+      innovation: innovation1,
       weight: 1,
       enabled: true,
     };
+    this.innovations[innovation1] = srcToNewEdgeId;
 
+    const innovation2 = Genome.upgradeInnovationNumber();
     this.connections[newToDstEdgeId] = {
-      innovation: Genome.upgradeInnovationNumber(),
+      innovation: innovation2,
       weight: this.connections[oldEdgeId].weight,
       enabled: true,
     };
+    this.innovations[innovation2] = newToDstEdgeId;
   }
 }
 
@@ -212,7 +238,6 @@ g1.nodes = {
   hidden: [5],
   output: [4],
 };
-
 g1.connections = {
   "1,4": { innovation: 1, weight: getRandom(-1, 1), enabled: true },
   "2,4": { innovation: 2, weight: getRandom(-1, 1), enabled: true },
@@ -221,15 +246,21 @@ g1.connections = {
   "5,4": { innovation: 5, weight: getRandom(-1, 1), enabled: true },
   "1,5": { innovation: 8, weight: getRandom(-1, 1), enabled: true },
 };
+g1.innovations = {
+  1: "1,4",
+  2: "2,4",
+  3: "3,4",
+  4: "2,5",
+  5: "5,4",
+  8: "1,5",
+};
 
 const g2 = new Genome({ numInputs: 2, numOutputs: 2 });
-
 g2.nodes = {
   input: [1, 2, 3],
   hidden: [5, 6],
   output: [4],
 };
-
 g2.connections = {
   "1,4": { innovation: 1, weight: getRandom(-1, 1), enabled: true },
   "2,4": { innovation: 2, weight: getRandom(-1, 1), enabled: true },
@@ -241,9 +272,19 @@ g2.connections = {
   "3,5": { innovation: 9, weight: getRandom(-1, 1), enabled: true },
   "1,6": { innovation: 10, weight: getRandom(-1, 1), enabled: true },
 };
+g2.innovations = {
+  1: "1,4",
+  2: "2,4",
+  3: "3,4",
+  4: "2,5",
+  5: "5,4",
+  6: "5,6",
+  7: "6,4",
+  9: "3,5",
+  10: "1,6",
+};
 
 console.log(g1);
 console.log(g2);
-
-const child = Genome.crossover({ genome: g1, fitness: 12 }, { genome: g2, fitness: 11 });
+const child = Genome.crossover({ genome: g1, fitness: 12 }, { genome: g2, fitness: 13 });
 console.log(child);
