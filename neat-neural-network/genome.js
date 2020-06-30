@@ -39,8 +39,35 @@ class Genome {
   static crossover(organismA, organismB) {
     const { genome: genomeA, fitness: fitnessA } = organismA;
     const { genome: genomeB, fitness: fitnessB } = organismB;
-    const offspring = new Genome();
-    const comparedInnovations = Genome.compareInnovations(genomeA, genomeB);
+    const comparison = Genome.compareInnovations(genomeA, genomeB);
+    const inheritanceA = [];
+    const inheritanceB = [];
+
+    comparison.intersection.forEach(gene => {
+      getRandomElement([true, false]) ? inheritanceA.push(gene) : inheritanceB.push(gene);
+    });
+
+    if (fitnessA > fitnessB) {
+      inheritanceA.push(...comparison.disjointA, ...comparison.excessA);
+    } else {
+      inheritanceB.push(...comparison.disjointB, ...comparison.excessB);
+    }
+
+    const offspringGenome = Genome.makeNodeUnionOffspring(genomeA, genomeB);
+
+    const inheritSetA = new Set(inheritanceA);
+    for (let [edgeId, connection] of Object.entries(genomeA.connections)) {
+      if (inheritSetA.has(connection.innovation))
+        offspringGenome.connections[edgeId] = { ...connection  };
+    }
+
+    const inheritSetB = new Set(inheritanceB);
+    for (let [edgeId, connection] of Object.entries(genomeB.connections)) {
+      if (inheritSetB.has(connection.innovation))
+        offspringGenome.connections[edgeId] = { ...connection  };
+    }
+
+    return offspringGenome;
   }
 
   static compareInnovations(genomeA, genomeB) {
@@ -97,12 +124,12 @@ class Genome {
   }
 
   static makeNodeUnionOffspring(genomeA, genomeB) {
-    const hiddenUnion = new Set([...genomeA.nodes.hidden, ...genomeB.nodes.hidden]);
+    const hiddenUnion = new Set([ ...genomeA.nodes.hidden, ...genomeB.nodes.hidden ]);
     const offspring = new Genome();
-    
+
     offspring.nodes = {
       input: genomeA.nodes.input.slice(),
-      hidden: [...hiddenUnion],
+      hidden: [...hiddenUnion ],
       output: genomeA.nodes.output.slice(),
     };
 
@@ -215,8 +242,8 @@ g2.connections = {
   "1,6": { innovation: 10, weight: getRandom(-1, 1), enabled: true },
 };
 
-
 console.log(g1);
 console.log(g2);
-console.log(Genome.compareInnovations(g1, g2));
-console.log(Genome.makeNodeUnionOffspring(g1, g2));
+
+const child = Genome.crossover({ genome: g1, fitness: 12 }, { genome: g2, fitness: 11 });
+console.log(child);
