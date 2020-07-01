@@ -6,6 +6,7 @@ const {
   getRandomElement
 } = require('./constants');
 
+// TODO track duplicate innovation on generation
 class Genome {
   static innovationNumber = 0;
 
@@ -78,7 +79,6 @@ class Genome {
     const numberExcess = excessA.length + excessB.length;
     const numberDisjoint = disjointA.length + disjointB.length;
 
-    // intersection weighted avg diff
     const weightDiffTotal = intersection.reduce((sum, gene) => {
       const edgeA = genomeA.innovations[gene];
       const edgeB = genomeB.innovations[gene];
