@@ -1,13 +1,10 @@
-const NUM_INPUTS = 20 * 20;
-const NUM_OUTPUTS = 4;
-const EXCESS_COEFFICIENT = 1;
-const DISJOINT_COEFFICIENT = 1;
-const WEIGHT_DIFF_COEFFICIENT = 1;
-
-const getRandom = (min, max) => Math.random() * (max - min) + min;
-const getRandomElement = (array) => array[Math.floor(getRandom(0, array.length))];
-
-// TODO prevent generation innovation duplicate
+const { 
+  EXCESS_COEFFICIENT,
+  DISJOINT_COEFFICIENT,
+  WEIGHT_DIFF_COEFFICIENT,
+  getRandom,
+  getRandomElement
+} = require('./constants');
 
 class Genome {
   static innovationNumber = 0;
@@ -306,8 +303,9 @@ g2.innovations = {
 // console.log(g1);
 // console.log(g2);
 // const child = Genome.crossover({ genome: g1, fitness: 12 }, { genome: g2, fitness: 13 });
-console.log(Genome.delta(g1,g2));
+// console.log(Genome.delta(g1,g2));
 // E = 2
 // D = 3
 // W = .82
 
+module.exports = Genome;
