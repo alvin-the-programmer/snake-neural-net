@@ -1,5 +1,8 @@
 const NUM_INPUTS = 20 * 20;
 const NUM_OUTPUTS = 4;
+const EXCESS_COEFFICIENT = 1;
+const DISJOINT_COEFFICIENT = 1;
+const WEIGHT_DIFF_COEFFICIENT = 1;
 
 const getRandom = (min, max) => Math.random() * (max - min) + min;
 const getRandomElement = (array) => array[Math.floor(getRandom(0, array.length))];
@@ -86,8 +89,14 @@ class Genome {
       const weightB = genomeB.connections[edgeB].weight;
       return sum + Math.abs(weightA - weightB);
     }, 0);
-
     const averageWeightDiff = weightDiffTotal / intersection.length;
+
+    const normalizeFactor= Math.max(genomeA.size(), genomeB.size());
+
+    const excessTerm = (EXCESS_COEFFICIENT * numberExcess) / normalizeFactor;
+    const disjointTerm = (DISJOINT_COEFFICIENT * numberDisjoint) / normalizeFactor;
+    const weightTerm = (WEIGHT_DIFF_COEFFICIENT * averageWeightDiff);
+    return excessTerm + disjointTerm + weightTerm;
   }
 
   static compareInnovations(genomeA, genomeB) {
@@ -122,7 +131,13 @@ class Genome {
       }
     }
 
-    return { intersection, disjointA, disjointB, excessA, excessB };
+    return { 
+      intersection: Array.from(intersection),
+      disjointA: Array.from(disjointA),
+      disjointB: Array.from(disjointB),
+      excessA: Array.from(excessA),
+      excessB: Array.from(excessB) 
+    };
   }
 
   static makeClone(parentGenome, numClones) {
@@ -170,6 +185,10 @@ class Genome {
 
   getExistingEdges() {
     return Object.keys(this.connections);
+  }
+
+  size() {
+    return Object.keys(this.connections).length;
   }
 
   getInnovations() {
@@ -239,12 +258,12 @@ g1.nodes = {
   output: [4],
 };
 g1.connections = {
-  "1,4": { innovation: 1, weight: getRandom(-1, 1), enabled: true },
-  "2,4": { innovation: 2, weight: getRandom(-1, 1), enabled: true },
-  "3,4": { innovation: 3, weight: getRandom(-1, 1), enabled: true },
-  "2,5": { innovation: 4, weight: getRandom(-1, 1), enabled: true },
-  "5,4": { innovation: 5, weight: getRandom(-1, 1), enabled: true },
-  "1,5": { innovation: 8, weight: getRandom(-1, 1), enabled: true },
+  "1,4": { innovation: 1, weight: -0.3, enabled: true },
+  "2,4": { innovation: 2, weight: 0.2, enabled: true },
+  "3,4": { innovation: 3, weight: -0.1, enabled: true },
+  "2,5": { innovation: 4, weight: 0.1, enabled: true },
+  "5,4": { innovation: 5, weight: -0.8, enabled: true },
+  "1,5": { innovation: 8, weight: 0.5, enabled: true },
 };
 g1.innovations = {
   1: "1,4",
@@ -262,15 +281,15 @@ g2.nodes = {
   output: [4],
 };
 g2.connections = {
-  "1,4": { innovation: 1, weight: getRandom(-1, 1), enabled: true },
-  "2,4": { innovation: 2, weight: getRandom(-1, 1), enabled: true },
-  "3,4": { innovation: 3, weight: getRandom(-1, 1), enabled: true },
-  "2,5": { innovation: 4, weight: getRandom(-1, 1), enabled: true },
-  "5,4": { innovation: 5, weight: getRandom(-1, 1), enabled: true },
-  "5,6": { innovation: 6, weight: getRandom(-1, 1), enabled: true },
-  "6,4": { innovation: 7, weight: getRandom(-1, 1), enabled: true },
-  "3,5": { innovation: 9, weight: getRandom(-1, 1), enabled: true },
-  "1,6": { innovation: 10, weight: getRandom(-1, 1), enabled: true },
+  "1,4": { innovation: 1, weight: 0.6, enabled: true },
+  "2,4": { innovation: 2, weight: -0.9, enabled: true },
+  "3,4": { innovation: 3, weight: 0.1, enabled: true },
+  "2,5": { innovation: 4, weight: -0.3, enabled: true },
+  "5,4": { innovation: 5, weight: 0.7, enabled: true },
+  "5,6": { innovation: 6, weight: -0.8, enabled: true },
+  "6,4": { innovation: 7, weight: 0.1, enabled: true },
+  "3,5": { innovation: 9, weight: -0.2, enabled: true },
+  "1,6": { innovation: 10, weight: 0.4, enabled: true },
 };
 g2.innovations = {
   1: "1,4",
@@ -284,7 +303,11 @@ g2.innovations = {
   10: "1,6",
 };
 
-console.log(g1);
-console.log(g2);
-const child = Genome.crossover({ genome: g1, fitness: 12 }, { genome: g2, fitness: 13 });
-console.log(child);
+// console.log(g1);
+// console.log(g2);
+// const child = Genome.crossover({ genome: g1, fitness: 12 }, { genome: g2, fitness: 13 });
+console.log(Genome.delta(g1,g2));
+// E = 2
+// D = 3
+// W = .82
+
