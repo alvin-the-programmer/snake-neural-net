@@ -4,9 +4,9 @@ const {
   ALPHA, 
   SNAKE_START_POS, 
   START_HEALTH,
-  MAX_FITNESS,
+  MAX_HEALTH,
   GameOver 
-} = require('./constants');
+} = require('../constants');
 
 const Snake = require('./Snake');
 
@@ -80,7 +80,7 @@ class Board {
       console.log(ALPHA[rowIndex] + row.join('|'));
     });
 
-    console.log('health:', this.health + '/' + MAX_FITNESS);
+    console.log('health:', this.health + '/' + MAX_HEALTH);
     console.log('fitness:', this.fitness);
     console.log('food_score:', this.food_score);
   }
@@ -91,7 +91,7 @@ class Board {
     try {
       if (this.snake.move(this.foodPos)) {
         this.food_score++;
-        this.health = Math.min(this.health + 51, MAX_FITNESS);
+        this.health = Math.min(this.health + 51, MAX_HEALTH);
         this.placeRandomFood();
       }
     } catch (error) {

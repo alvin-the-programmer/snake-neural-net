@@ -4,7 +4,7 @@ const {
   WEIGHT_DIFF_COEFFICIENT,
   getRandom,
   getRandomElement
-} = require('./constants');
+} = require('../constants');
 
 // TODO track duplicate innovation on generation
 class Genome {

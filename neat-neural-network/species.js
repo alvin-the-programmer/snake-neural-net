@@ -1,4 +1,4 @@
-const { SPECIES_COMPATIBILITY_THRESHOLD, getRandomElement } = require('./constants');
+const { SPECIES_COMPATIBILITY_THRESHOLD, getRandomElement } = require('../constants');
 const Genome = require('./genome');
 
 class Species {

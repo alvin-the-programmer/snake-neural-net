@@ -1,4 +1,8 @@
-const { WIDTH, HEIGHT, GameOver } = require('./constants');
+const { 
+  WIDTH, 
+  HEIGHT, 
+  GameOver 
+} = require('../constants');
 
 class Snake {
   constructor(startPos) {
