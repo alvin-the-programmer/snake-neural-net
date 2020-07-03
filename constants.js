@@ -5,6 +5,8 @@ const getRandom = (min, max) => Math.random() * (max - min) + min;
 
 const getRandomElement = (array) => array[Math.floor(getRandom(0, array.length))];
 
+const sigmoid = x => 1 / (1 + Math.E**(-x));
+
 class GameOver extends Error {
   constructor() {
     super('snake collision');
@@ -27,5 +29,6 @@ module.exports = {
   ALPHA: 'abcdefghijklmnopqrst',
   getRandom,
   getRandomElement,
+  sigmoid,
   GameOver
 }
