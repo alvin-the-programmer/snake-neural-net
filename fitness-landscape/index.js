@@ -1,20 +1,22 @@
 
 const { 
   NODE_DIRECTION_MAP,
+  GameOver,
   getRandom,
   sleep
 } = require('../constants');
+
 const SnakeGame = require('../snake-game');
 const NeuralNetwork = require('../neat-neural-network/neural-network');
-
 
 class FitnessLandscape {
   constructor(neuralNetwork) {
     this.neuralNetwork = neuralNetwork;
   }
 
-  async getFitness() {
+  async getFitness(options = { draw: false }) {
     const game = new SnakeGame();
+
     while (true) {
       const inputs = {};
       const state = game.getState();
@@ -22,9 +24,22 @@ class FitnessLandscape {
       const outputNode = this.neuralNetwork.getOutput(inputs);
       const direction = NODE_DIRECTION_MAP[outputNode];
       game.input(direction);
-      game.simulate({ draw: true });
-      await sleep(50);
+      try {
+        game.simulate();
+        if (options.draw) {
+          game.draw();
+          await sleep(50);
+        }
+      } catch (error) {
+        if (error instanceof GameOver) {
+          console.log('GAME OVER!');
+          break;
+        } else {
+          throw error;
+        }
+      }
     }
+    return game.fitness;
   }
 }
 
@@ -53,6 +68,6 @@ nodes.hidden.forEach(b => {
 
 const testNetwork = new NeuralNetwork(nodes, connections);
 const testLandscape = new FitnessLandscape(testNetwork);
-testLandscape.getFitness();
+testLandscape.getFitness({ draw: true }).then(console.log);
 
 module.exports = FitnessLandscape;

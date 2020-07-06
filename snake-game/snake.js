@@ -38,7 +38,7 @@ class Snake {
     const newHeadPos = [ headRow + this.direction.y, headCol + this.direction.x ];
 
     if (this.isCollision(newHeadPos))
-      throw new GameOver(); 
+      throw new GameOver('collision made'); 
     
     this.positions.unshift(newHeadPos); 
       

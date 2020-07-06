@@ -28,8 +28,8 @@ const sleep = ms => {
 };
 
 class GameOver extends Error {
-  constructor() {
-    super('snake collision');
+  constructor(msg) {
+    super(msg);
     this.name = 'GameOver';
   }
 }

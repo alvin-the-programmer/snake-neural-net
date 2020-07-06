@@ -93,28 +93,21 @@ class SnakeGame {
     console.log('health:', this.health + '/' + MAX_HEALTH);
     console.log('fitness:', this.fitness);
     console.log('food_score:', this.food_score);
-    console.log(this.getState());
+    console.log('state:', this.getState());
   }
 
-  simulate(options = { draw: false }) {
+  simulate() {
     this.health--;
     this.fitness++;
-    try {
-      if (this.snake.move(this.foodPos)) {
-        this.food_score++;
-        this.health = Math.min(this.health + 51, MAX_HEALTH);
-        this.placeRandomFood();
-      }
-    } catch (error) {
-      if (error instanceof GameOver || this.health === 0) {
-        console.log('GAME OVER!');
-        process.exit();
-      } else {
-        throw error;
-      }
+    
+    if (this.snake.move(this.foodPos)) {
+      this.food_score++;
+      this.health = Math.min(this.health + 51, MAX_HEALTH);
+      this.placeRandomFood();
     }
-    if (options.draw)
-      this.draw();
+
+    if (this.health === 0)
+      throw new GameOver('zero health reached');
   }
 
   input(direction) {
@@ -139,7 +132,8 @@ class SnakeGame {
         this.input(DIRECTION.DOWN);
       if (key === 'd')
         this.input(DIRECTION.RIGHT);
-        this.simulate({draw: true})
+        this.simulate();
+        this.draw();
     });
   }
 };
