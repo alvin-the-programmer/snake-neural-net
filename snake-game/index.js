@@ -1,6 +1,7 @@
 const { 
   WIDTH, 
-  HEIGHT, 
+  HEIGHT,
+  DIRECTION,
   ALPHA, 
   SNAKE_START_POS, 
   START_HEALTH,
@@ -10,7 +11,7 @@ const {
 
 const Snake = require('./Snake');
 
-class Board {
+class SnakeGame {
   constructor() {
     this.grid = new Array(HEIGHT).fill().map(() => new Array(WIDTH));
     this.snake = new Snake(SNAKE_START_POS);
@@ -46,10 +47,10 @@ class Board {
   }
 
   // getState() {
-  //   let [ snakeHeadEnum, ...snakeBodyEnums ] = this.snake.positions.map(Board.positionToEnum);
-  //   let foodEnum = Board.positionToEnum(this.foodPos); 
+  //   let [ snakeHeadEnum, ...snakeBodyEnums ] = this.snake.positions.map(SnakeGame.positionToEnum);
+  //   let foodEnum = SnakeGame.positionToEnum(this.foodPos); 
   //   const state = {};
-  //   Board.allPositions().map(Board.positionToEnum).forEach(posEnum => state[posEnum] = 0);
+  //   SnakeGame.allPositions().map(SnakeGame.positionToEnum).forEach(posEnum => state[posEnum] = 0);
   //   snakeBodyEnums.forEach(posEnum => state[posEnum] = 1);
   //   state[snakeHeadEnum] = 2;
   //   state[foodEnum] = 3;
@@ -58,7 +59,7 @@ class Board {
 
   availablePositions() {
     const snakePositions = new Set(this.snake.positions.map(String));
-    return Board.allPositions().filter(pos => !snakePositions.has(String(pos)));
+    return SnakeGame.allPositions().filter(pos => !snakePositions.has(String(pos)));
   }
 
   placeRandomFood() {
@@ -67,7 +68,7 @@ class Board {
   }
 
   fillGrid() {
-    Board.allPositions().forEach(([r, c]) => this.grid[r][c] = ' ');
+    SnakeGame.allPositions().forEach(([r, c]) => this.grid[r][c] = ' ');
   }
 
   draw() {
@@ -95,7 +96,7 @@ class Board {
     console.log(this.getState());
   }
 
-  simulate() {
+  simulate(options = { draw: false }) {
     this.health--;
     this.fitness++;
     try {
@@ -112,7 +113,14 @@ class Board {
         throw error;
       }
     }
-    this.draw();
+    if (options.draw)
+      this.draw();
+  }
+
+  input(direction) {
+    if (!(Object.values(DIRECTION).includes(direction)))
+      throw Error(`invalid direction ${direction}`);
+    this.snake[direction]();
   }
 
   debug() {
@@ -124,16 +132,16 @@ class Board {
       if (key === '\u0003')
         process.exit();
       if (key === 'w')
-        this.snake.up();
+        this.input(DIRECTION.UP);
       if (key === 'a')
-        this.snake.left();
+        this.input(DIRECTION.LEFT);
       if (key === 's')
-        this.snake.down();
+        this.input(DIRECTION.DOWN);
       if (key === 'd')
-        this.snake.right();
-        this.simulate()
+        this.input(DIRECTION.RIGHT);
+        this.simulate({draw: true})
     });
   }
 };
 
-module.exports = Board;
+module.exports = SnakeGame;

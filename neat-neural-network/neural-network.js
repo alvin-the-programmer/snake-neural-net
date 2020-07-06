@@ -42,7 +42,6 @@ class NeuralNetwork {
       inactiveIngress[node] = new Set(this.inputMap[node]);
 
     const exploreNode = node => {
-      console.log(node);
       for (let dstNode of this.outputMap[node]) {
         inactiveIngress[dstNode].delete(node);
         if (inactiveIngress[dstNode].size === 0)
@@ -75,23 +74,18 @@ class NeuralNetwork {
     
     return activation;
   }
+
+  getOutput(inputs) {
+    const activationLevel = this.activate(inputs);
+    let maxNode = null;
+
+    this.nodes.output.forEach(node => {
+      if (activationLevel[node] > activationLevel[maxNode] || maxNode === null)
+        maxNode = node;
+    });
+
+    return maxNode;
+  }
 }
 
-const nodes = {
-  input: [1, 2, 3],
-  hidden: [5],
-  output: [4],
-};
-
-const connections = {
-  "1,4": { weight: -0.3, enabled: true },
-  "2,4": { weight: 0.2, enabled: true },
-  "3,4": { weight: -0.1, enabled: true },
-  "2,5": { weight: 0.1, enabled: true },
-  "5,4": { weight: -0.8, enabled: true },
-  "1,5": { weight: 0.5, enabled: true },
-};
-
-const net = new NeuralNetwork(nodes, connections);
-
-console.log(net.activate({1: 3, 2: 3, 3: 5}));
+module.exports = NeuralNetwork;
