@@ -14,7 +14,7 @@ class FitnessLandscape {
     this.neuralNetwork = neuralNetwork;
   }
 
-  async getFitness(options = { draw: false }) {
+  getFitness() {
     const game = new SnakeGame();
 
     while (true) {
@@ -24,12 +24,36 @@ class FitnessLandscape {
       const outputNode = this.neuralNetwork.getOutput(inputs);
       const direction = NODE_DIRECTION_MAP[outputNode];
       game.input(direction);
+
       try {
         game.simulate();
-        if (options.draw) {
-          game.draw();
-          await sleep(40);
+      } catch (error) {
+        if (error instanceof GameOver) {
+          break;
+        } else {
+          throw error;
         }
+      }
+    } 
+
+    return game.fitness;
+  }
+
+  async animate() {
+    const game = new SnakeGame();
+
+    while (true) {
+      const inputs = {};
+      const state = game.getState();
+      this.neuralNetwork.nodes.input.forEach((node, i) => inputs[node] = state[i]);
+      const outputNode = this.neuralNetwork.getOutput(inputs);
+      const direction = NODE_DIRECTION_MAP[outputNode];
+      game.input(direction);
+
+      try {
+        game.simulate();
+        game.draw();
+        await sleep(40);
       } catch (error) {
         if (error instanceof GameOver) {
           console.log('GAME OVER!');
@@ -39,11 +63,10 @@ class FitnessLandscape {
         }
       }
     } 
-
-    return { 
+    console.log({ 
       connections: this.neuralNetwork.connections,
       fitness: game.fitness 
-    };
+    });
   }
 }
 
@@ -100,6 +123,6 @@ const connections = {
 
 const testNetwork = new NeuralNetwork(nodes, connections);
 const testLandscape = new FitnessLandscape(testNetwork);
-testLandscape.getFitness({ draw: true }).then(console.log);
+console.log(testLandscape.animate());
 
 module.exports = FitnessLandscape;

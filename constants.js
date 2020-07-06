@@ -17,7 +17,9 @@ const NODE_DIRECTION_MAP = {
 
 const getRandom = (min, max) => Math.random() * (max - min) + min;
 
-const getRandomElement = (array) => array[Math.floor(getRandom(0, array.length))];
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
+
+const getRandomElement = (array) => array[getRandomInt(0, array.length)];
 
 const sigmoid = x => 1 / (1 + Math.E**(-x));
 
@@ -51,6 +53,7 @@ module.exports = {
   SPECIES_COMPATIBILITY_THRESHOLD: 1,
   ALPHA: 'abcdefghijklmnopqrst',
   getRandom,
+  getRandomInt,
   getRandomElement,
   sigmoid,
   sleep,

@@ -6,7 +6,8 @@ const {
   SNAKE_START_POS, 
   START_HEALTH,
   MAX_HEALTH,
-  GameOver 
+  getRandomInt,
+  GameOver,
 } = require('../constants');
 
 const Snake = require('./Snake');
@@ -15,7 +16,7 @@ class SnakeGame {
   constructor() {
     this.grid = new Array(HEIGHT).fill().map(() => new Array(WIDTH));
     this.snake = new Snake(SNAKE_START_POS);
-    this.foodPos = [ 10, 13 ];
+    this.foodPos = [ getRandomInt(0, HEIGHT), getRandomInt(0, WIDTH) ];
     this.fillGrid();
     this.health = START_HEALTH;
     this.fitness = 0;
@@ -99,7 +100,7 @@ class SnakeGame {
   simulate() {
     this.health--;
     this.fitness++;
-    
+
     if (this.snake.move(this.foodPos)) {
       this.food_score++;
       this.health = Math.min(this.health + 51, MAX_HEALTH);
