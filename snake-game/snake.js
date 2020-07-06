@@ -1,6 +1,7 @@
 const { 
   WIDTH, 
-  HEIGHT, 
+  HEIGHT,
+  SNAKE_GROW,
   GameOver 
 } = require('../constants');
 
@@ -9,11 +10,7 @@ class Snake {
     const [ startRow, startCol ] = startPos;
 
     this.positions = [
-      [ startRow, startCol ],
-      [ startRow, startCol - 1 ],
-      [ startRow, startCol - 2 ],
-      [ startRow, startCol - 3 ],
-      [ startRow, startCol - 4 ],
+      [ startRow, startCol ]
     ];
 
     this.right();
@@ -46,6 +43,9 @@ class Snake {
     this.positions.unshift(newHeadPos); 
       
     if (String(newHeadPos) === String(foodPos)) {
+      if (!SNAKE_GROW)
+        this.positions.pop();
+
       return true;
     } else {
       this.positions.pop();

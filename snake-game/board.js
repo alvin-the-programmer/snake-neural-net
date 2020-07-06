@@ -37,15 +37,24 @@ class Board {
   }
 
   getState() {
-    let [ snakeHeadEnum, ...snakeBodyEnums ] = this.snake.positions.map(Board.positionToEnum);
-    let foodEnum = Board.positionToEnum(this.foodPos); 
-    const state = {};
-    Board.allPositions().map(Board.positionToEnum).forEach(posEnum => state[posEnum] = 0);
-    snakeBodyEnums.forEach(posEnum => state[posEnum] = 1);
-    state[snakeHeadEnum] = 2;
-    state[foodEnum] = 3;
-    return state;
+    const state = {
+      head: this.snake.positions[0],
+      food: this.foodPos
+    };
+
+    return [ ...state.head, ...state.food ];
   }
+
+  // getState() {
+  //   let [ snakeHeadEnum, ...snakeBodyEnums ] = this.snake.positions.map(Board.positionToEnum);
+  //   let foodEnum = Board.positionToEnum(this.foodPos); 
+  //   const state = {};
+  //   Board.allPositions().map(Board.positionToEnum).forEach(posEnum => state[posEnum] = 0);
+  //   snakeBodyEnums.forEach(posEnum => state[posEnum] = 1);
+  //   state[snakeHeadEnum] = 2;
+  //   state[foodEnum] = 3;
+  //   return state;
+  // }
 
   availablePositions() {
     const snakePositions = new Set(this.snake.positions.map(String));
@@ -83,6 +92,7 @@ class Board {
     console.log('health:', this.health + '/' + MAX_HEALTH);
     console.log('fitness:', this.fitness);
     console.log('food_score:', this.food_score);
+    console.log(this.getState());
   }
 
   simulate() {
