@@ -55,7 +55,7 @@ class NeuralNetwork {
 
     nodes.input.forEach(inputNode => {
       nodes.output.forEach(outputNode => {
-        connections[inputNode + ',' + outputNode] = { weight: getRandom(-1,1), enabled: true };
+        connections[inputNode + ',' + outputNode] = { weight: getRandom(-1, s1), enabled: true };
       });
     });
 
