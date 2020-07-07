@@ -2,9 +2,12 @@ const {
   EXCESS_COEFFICIENT,
   DISJOINT_COEFFICIENT,
   WEIGHT_DIFF_COEFFICIENT,
+  PERTURB_WEIGHT_DELTA,
   getRandom,
   getRandomElement
 } = require('../constants');
+
+const NeuralNetwork = require('./neural-network');
 
 // TODO track duplicate innovation on generation
 class Genome {
@@ -32,7 +35,7 @@ class Genome {
         const innovation = Genome.upgradeInnovationNumber();
         this.connections[edgeId] = {
           innovation,
-          weight: getRandom(-1, 1),
+          weight: 0,
           enabled: true,
         };
         this.innovations[innovation] = edgeId;
@@ -137,7 +140,7 @@ class Genome {
     };
   }
 
-  static makeClone(parentGenome, numClones) {
+  static makeClones(parentGenome, numClones) {
     let clones = [];
 
     for (let i = 0; i < numClones; i++) {
@@ -148,6 +151,8 @@ class Genome {
 
       for (let edge in parentGenome.connections)
         childGenome.connections[edge] = { ...parentGenome.connections[edge] };
+
+      childGenome.innovations = { ...parentGenome.innovations };
 
       clones.push(childGenome);
     }
@@ -174,6 +179,10 @@ class Genome {
 
   static upgradeInnovationNumber() {
     return ++Genome.innovationNumber;
+  }
+
+  makeNeuralNetwork() {
+    return new NeuralNetwork(this.nodes, this.connections);
   }
 
   getNodes() {
@@ -246,66 +255,14 @@ class Genome {
     };
     this.innovations[innovation2] = newToDstEdgeId;
   }
+
+  randomlyPerturbWeight(edge) {
+    this.connections[edge].weight += getRandom(-PERTURB_WEIGHT_DELTA, PERTURB_WEIGHT_DELTA);
+  }
+
+  randomlyAssignWeight(edge) {
+    this.connections[edge].weight = getRandom(-1, 1);
+  }
 }
-
-const g1 = new Genome({ numInputs: 3, numOutputs: 1 });
-g1.nodes = {
-  input: [1, 2, 3],
-  hidden: [5],
-  output: [4],
-};
-g1.connections = {
-  "1,4": { innovation: 1, weight: -0.3, enabled: true },
-  "2,4": { innovation: 2, weight: 0.2, enabled: true },
-  "3,4": { innovation: 3, weight: -0.1, enabled: true },
-  "2,5": { innovation: 4, weight: 0.1, enabled: true },
-  "5,4": { innovation: 5, weight: -0.8, enabled: true },
-  "1,5": { innovation: 8, weight: 0.5, enabled: true },
-};
-g1.innovations = {
-  1: "1,4",
-  2: "2,4",
-  3: "3,4",
-  4: "2,5",
-  5: "5,4",
-  8: "1,5",
-};
-
-const g2 = new Genome({ numInputs: 2, numOutputs: 2 });
-g2.nodes = {
-  input: [1, 2, 3],
-  hidden: [5, 6],
-  output: [4],
-};
-g2.connections = {
-  "1,4": { innovation: 1, weight: 0.6, enabled: true },
-  "2,4": { innovation: 2, weight: -0.9, enabled: true },
-  "3,4": { innovation: 3, weight: 0.1, enabled: true },
-  "2,5": { innovation: 4, weight: -0.3, enabled: true },
-  "5,4": { innovation: 5, weight: 0.7, enabled: true },
-  "5,6": { innovation: 6, weight: -0.8, enabled: true },
-  "6,4": { innovation: 7, weight: 0.1, enabled: true },
-  "3,5": { innovation: 9, weight: -0.2, enabled: true },
-  "1,6": { innovation: 10, weight: 0.4, enabled: true },
-};
-g2.innovations = {
-  1: "1,4",
-  2: "2,4",
-  3: "3,4",
-  4: "2,5",
-  5: "5,4",
-  6: "5,6",
-  7: "6,4",
-  9: "3,5",
-  10: "1,6",
-};
-
-// console.log(g1);
-// console.log(g2);
-// const child = Genome.crossover({ genome: g1, fitness: 12 }, { genome: g2, fitness: 13 });
-// console.log(Genome.delta(g1,g2));
-// E = 2
-// D = 3
-// W = .82
 
 module.exports = Genome;

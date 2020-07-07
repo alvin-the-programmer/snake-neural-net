@@ -1,6 +1,5 @@
 const { 
-  sigmoid,
-  getRandom
+  sigmoid
 } = require('../constants');
 
 // TODO what happens if there is a cycle?
@@ -8,14 +7,19 @@ const {
 class NeuralNetwork {
   constructor ({ input, hidden, output }, connections) {
     this.nodes = {
-      input,
-      hidden,
-      output
+      input: [...input],
+      hidden: [...hidden],
+      output: [...output]
     };
 
-    this.connections = connections;
+    this.connections = {};
     this.inputMap = {};
     this.outputMap = {};
+
+    for (const edge in connections) {
+      const connection = connections[edge];
+      this.connections[edge] = { weight: connection.weight, enabled: connection.enabled }; 
+    }
 
     [ ...input, ...hidden, ...output ].forEach(node => {
       this.inputMap[node] = new Set();
@@ -34,32 +38,6 @@ class NeuralNetwork {
       const [ src, dst ] = edge.split(',');
       this.outputMap[src].add(dst);
     }
-  }
-
-  static makeRandomSimpleNetwork(numInput, numOutput) {
-    const nodes = {
-      input: [],
-      hidden: [],
-      output: []
-    };
-
-    let node = 1;
-
-    for (node; node <= numInput; node++)
-      nodes.input.push(node);
-
-    for (node; node <= numInput + numOutput; node++)
-      nodes.output.push(node);
-
-    const connections = {};
-
-    nodes.input.forEach(inputNode => {
-      nodes.output.forEach(outputNode => {
-        connections[inputNode + ',' + outputNode] = { weight: getRandom(-1, s1), enabled: true };
-      });
-    });
-
-    return new NeuralNetwork(nodes, connections);
   }
 
   activate(inputActivations) {
@@ -117,6 +95,6 @@ class NeuralNetwork {
   }
 }
 
-console.log(NeuralNetwork.makeRandomSimpleNetwork(4, 4));
+// console.log(NeuralNetwork.makeRandomSimpleNetwork(4, 4));
 
 module.exports = NeuralNetwork;

@@ -1,6 +1,3 @@
-const WIDTH = 20;
-const HEIGHT = 20;
-
 const DIRECTION = {
   UP: 'up',
   DOWN: 'down',
@@ -37,10 +34,10 @@ class GameOver extends Error {
 }
 
 module.exports = {
-  WIDTH,
-  HEIGHT,
   DIRECTION,
   NODE_DIRECTION_MAP,
+  WIDTH: 20,
+  HEIGHT: 20,
   SNAKE_START_POS: [5, 5],
   SNAKE_GROW: false,
   START_HEALTH: 50,
@@ -49,8 +46,10 @@ module.exports = {
   NUM_OUTPUTS: 4,
   EXCESS_COEFFICIENT: 1,
   DISJOINT_COEFFICIENT: 1,
-  WEIGHT_DIFF_COEFFICIENT: 1,
-  SPECIES_COMPATIBILITY_THRESHOLD: 1,
+  WEIGHT_DIFF_COEFFICIENT: 0.4,
+  SPECIES_COMPATIBILITY_THRESHOLD: 3,
+  INITIAL_POPULATION_SIZE: 128,
+  PERTURB_WEIGHT_DELTA: .03,
   ALPHA: 'abcdefghijklmnopqrst',
   getRandom,
   getRandomInt,
