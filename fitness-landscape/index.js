@@ -64,6 +64,7 @@ class FitnessLandscape {
       }
     } 
     console.log({ 
+      nodes: this.neuralNetwork.nodes,
       connections: this.neuralNetwork.connections,
       fitness: game.fitness 
     });

@@ -1,4 +1,7 @@
-const { sigmoid } = require('../constants');
+const { 
+  sigmoid,
+  getRandom
+} = require('../constants');
 
 // TODO what happens if there is a cycle?
 
@@ -31,6 +34,32 @@ class NeuralNetwork {
       const [ src, dst ] = edge.split(',');
       this.outputMap[src].add(dst);
     }
+  }
+
+  static makeRandomSimpleNetwork(numInput, numOutput) {
+    const nodes = {
+      input: [],
+      hidden: [],
+      output: []
+    };
+
+    let node = 1;
+
+    for (node; node <= numInput; node++)
+      nodes.input.push(node);
+
+    for (node; node <= numInput + numOutput; node++)
+      nodes.output.push(node);
+
+    const connections = {};
+
+    nodes.input.forEach(inputNode => {
+      nodes.output.forEach(outputNode => {
+        connections[inputNode + ',' + outputNode] = { weight: getRandom(-1,1), enabled: true };
+      });
+    });
+
+    return new NeuralNetwork(nodes, connections);
   }
 
   activate(inputActivations) {
@@ -87,5 +116,7 @@ class NeuralNetwork {
     return maxNode;
   }
 }
+
+console.log(NeuralNetwork.makeRandomSimpleNetwork(4, 4));
 
 module.exports = NeuralNetwork;
