@@ -1,4 +1,4 @@
-const { NUM_INPUTS, NUM_OUTPUTS, INITIAL_POPULATION_SIZE } = require('../constants');
+const { NUM_INPUTS, NUM_OUTPUTS, POPULATION_SIZE } = require('../constants');
 const Genome = require('./genome');
 const Species = require('./species');
 
@@ -35,6 +35,6 @@ class Generation {
   }
 }
 
-const g0 = Generation.makeInitialPopulation(INITIAL_POPULATION_SIZE);
+const g0 = Generation.makeInitialPopulation(POPULATION_SIZE);
 console.log(g0.species.length);
 console.log(g0.species.reduce((sum, species) => sum + species.size(), 0));
