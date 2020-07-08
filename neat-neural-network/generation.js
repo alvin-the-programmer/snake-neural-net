@@ -45,16 +45,25 @@ class Generation {
 
     const populationFitness = this.species.reduce((sum, species) => sum + species.getTotalFitness(), 0);
 
-    const offspringDistribution = this.species.map((species, i) => {species.getTotalFitness()
-      return POPULATION_SIZE * (species.getTotalFitness() / populationFitness);
+    const offspringDistribution = this.species.map(species => {
+      return Math.round(POPULATION_SIZE * (species.getTotalFitness() / populationFitness));
     });
 
-    console.log(offspringDistribution);
+    const roundingError = POPULATION_SIZE - offspringDistribution.reduce((sum, n) => sum + n);
+    const delta = roundingError > 0 ? +1 : -1;
+    let errorMagnitude = Math.abs(roundingError);
+    for(let i = 0; errorMagnitude > 0; i++) {
+      offspringDistribution[i % offspringDistribution.length] += delta;
+      errorMagnitude--;
+    }
+
+    console.log(offspringDistribution); // TODO
+
     return nextGeneration;
   }
 }
 
 const g0 = Generation.makeInitialPopulation(POPULATION_SIZE);
-console.log(g0.species.length);
 
+console.log(g0.species.length);
 g0.evolve();
