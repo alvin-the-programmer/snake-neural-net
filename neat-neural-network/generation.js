@@ -1,4 +1,9 @@
-const { NUM_INPUTS, NUM_OUTPUTS, POPULATION_SIZE } = require('../constants');
+const { 
+  NUM_INPUTS, 
+  NUM_OUTPUTS, 
+  POPULATION_SIZE,
+  SPECIES_EXTINCTION_THRESHOLD,
+} = require('../constants');
 
 const Genome = require('./genome');
 const Species = require('./species');
@@ -46,18 +51,22 @@ class Generation {
     const populationFitness = this.species.reduce((sum, species) => sum + species.getTotalFitness(), 0);
 
     const offspringDistribution = this.species.map(species => {
-      return Math.round(POPULATION_SIZE * (species.getTotalFitness() / populationFitness));
+      const numOffspring = Math.round(POPULATION_SIZE * (species.getTotalFitness() / populationFitness));
+      return numOffspring < SPECIES_EXTINCTION_THRESHOLD ? 0 : numOffspring;
     });
 
-    const roundingError = POPULATION_SIZE - offspringDistribution.reduce((sum, n) => sum + n);
-    const delta = roundingError > 0 ? +1 : -1;
-    let errorMagnitude = Math.abs(roundingError);
+    const error = POPULATION_SIZE - offspringDistribution.reduce((sum, n) => sum + n);
+    const delta = error > 0 ? +1 : -1;
+    let errorMagnitude = Math.abs(error);
     for(let i = 0; errorMagnitude > 0; i++) {
-      offspringDistribution[i % offspringDistribution.length] += delta;
-      errorMagnitude--;
+      const speciesIdx = i % offspringDistribution.length;
+      if (offspringDistribution[speciesIdx] !== 0) {
+        offspringDistribution[speciesIdx] += delta;
+        errorMagnitude--;
+      }
     }
 
-    console.log(offspringDistribution); // TODO
+    console.log(offspringDistribution.reduce((a, b) => a + b)); // TODO
 
     return nextGeneration;
   }
