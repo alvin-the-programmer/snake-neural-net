@@ -8,6 +8,7 @@ const {
 } = require('../constants');
 
 const NeuralNetwork = require('./neural-network');
+const FitnessLandscape = require('../fitness-landscape');
 
 // TODO track duplicate innovation on generation
 class Genome {
@@ -195,6 +196,11 @@ class Genome {
 
   size() {
     return Object.keys(this.connections).length;
+  }
+
+  getFitness() {
+    const fitnessLandscape = new FitnessLandscape(this.makeNeuralNetwork());
+    return fitnessLandscape.calculateFitness();
   }
 
   getInnovations() {
