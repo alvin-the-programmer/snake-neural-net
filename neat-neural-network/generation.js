@@ -34,7 +34,27 @@ class Generation {
     
     return generationZero;
   }
+
+  evolve() {
+    const nextGeneration = new Generation();
+
+    this.species.forEach(prevSpecies => {
+      const nextSpecies = new Species(prevSpecies.getRandomMember());
+      nextGeneration.species.push(nextSpecies);
+    });
+
+    const populationFitness = this.species.reduce((sum, species) => sum + species.getTotalFitness(), 0);
+
+    const offspringDistribution = this.species.map((species, i) => {species.getTotalFitness()
+      return POPULATION_SIZE * (species.getTotalFitness() / populationFitness);
+    });
+
+    console.log(offspringDistribution);
+    return nextGeneration;
+  }
 }
 
 const g0 = Generation.makeInitialPopulation(POPULATION_SIZE);
-console.log(g0.species[0].representative.getFitness());
+console.log(g0.species.length);
+
+g0.evolve();

@@ -6,7 +6,7 @@ const {
   SNAKE_START_POS, 
   START_HEALTH,
   MAX_HEALTH,
-  getRandomInt,
+  makeGetSeededRandomInt,
   GameOver,
 } = require('../constants');
 
@@ -16,11 +16,13 @@ class SnakeGame {
   constructor() {
     this.grid = new Array(HEIGHT).fill().map(() => new Array(WIDTH));
     this.snake = new Snake(SNAKE_START_POS);
-    this.foodPos = [ getRandomInt(0, HEIGHT), getRandomInt(0, WIDTH) ];
     this.fillGrid();
     this.health = START_HEALTH;
     this.fitness = 0;
     this.food_score = 0;
+    this.getSeededRandomInt = makeGetSeededRandomInt();
+    this.foodPos = null;
+    this.placeRandomFood();
   }
 
   static allPositions() {
@@ -46,18 +48,7 @@ class SnakeGame {
 
     return [ ...state.head, ...state.food ];
   }
-
-  // getState() {
-  //   let [ snakeHeadEnum, ...snakeBodyEnums ] = this.snake.positions.map(SnakeGame.positionToEnum);
-  //   let foodEnum = SnakeGame.positionToEnum(this.foodPos); 
-  //   const state = {};
-  //   SnakeGame.allPositions().map(SnakeGame.positionToEnum).forEach(posEnum => state[posEnum] = 0);
-  //   snakeBodyEnums.forEach(posEnum => state[posEnum] = 1);
-  //   state[snakeHeadEnum] = 2;
-  //   state[foodEnum] = 3;
-  //   return state;
-  // }
-
+  
   availablePositions() {
     const snakePositions = new Set(this.snake.positions.map(String));
     return SnakeGame.allPositions().filter(pos => !snakePositions.has(String(pos)));
@@ -65,7 +56,7 @@ class SnakeGame {
 
   placeRandomFood() {
     const availablePositions = this.availablePositions();
-    this.foodPos = availablePositions[Math.floor(Math.random() * availablePositions.length)];
+    this.foodPos = availablePositions[this.getSeededRandomInt(0, availablePositions.length)];
   }
 
   fillGrid() {

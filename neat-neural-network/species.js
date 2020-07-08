@@ -29,6 +29,16 @@ class Species {
 
     return genome.getFitness() / this.size();
   }
+
+  getTotalFitness() {
+    let totalFitness = 0;
+
+    for (let genome of this.members) {
+      totalFitness += this.getAdjustedFitness(genome);
+    }
+
+    return totalFitness;
+  }
 }
 
 module.exports = Species;

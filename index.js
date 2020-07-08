@@ -1,4 +1,6 @@
-const Board = require('./snake-game');
+const SnakeGame = require('./snake-game');
 
-const board = new Board();
-board.debug();
+const game = new SnakeGame();
+game.debug();
+
+
