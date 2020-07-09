@@ -3,29 +3,53 @@ const {
   NUM_OUTPUTS, 
   POPULATION_SIZE,
   SPECIES_EXTINCTION_THRESHOLD,
+  SPECIES_CULL_RATE,
 } = require('../constants');
 
 const Genome = require('./genome');
 const Species = require('./species');
 
 class Generation {
-  static count = 0;
-
   constructor() {
     this.species = [];
-    this.number = Generation.count++;
+    this.genNumber = 0;
   }
 
-  static makeInitialPopulation(size) {
+  static makeInitialPopulation() {
     const primordialGenome = new Genome({ numInputs: NUM_INPUTS, numOutputs: NUM_OUTPUTS });
-    const generationZero = new Generation();
+    return Genome.makeClones(primordialGenome, POPULATION_SIZE).map(genome => {
+      for (const edge in genome.connections)
+        genome.randomlyAssignWeight(edge);
+      return genome;
+    });
+  }
 
-    Genome.makeClones(primordialGenome, size).forEach(genome => {
+  evolve() {
+    if (this.genNumber === 0) {
+      const initialPop = Generation.makeInitialPopulation();
+      this.speciate(initialPop);
+      this.genNumber++;
+      return;
+    }
+
+    const offspringDistribution = this.calculateOffspringDistribution();
+
+    this.species.forEach(species => {
+      species.setRandomRepresentative();
+      species.cullMembers(SPECIES_CULL_RATE);
+      species.reproduce();
+    });
+
+    this.genNumber++;
+  }
+
+  speciate(genomes) {
+    genomes.forEach(genome => {
       for (const edge in genome.connections)
         genome.randomlyAssignWeight(edge);
 
       let compatibleSpeciesFound = false;
-      for (const species of generationZero.species) {
+      for (const species of this.species) {
         if (species.isCompatible(genome)) {
           compatibleSpeciesFound = true;
           species.members.add(genome);
@@ -34,20 +58,11 @@ class Generation {
       }
 
       if (!compatibleSpeciesFound)
-        generationZero.species.push(new Species(genome));
+        this.species.push(new Species(genome));
     });
-    
-    return generationZero;
   }
 
-  evolve() {
-    const nextGeneration = new Generation();
-
-    this.species.forEach(prevSpecies => {
-      const nextSpecies = new Species(prevSpecies.getRandomMember());
-      nextGeneration.species.push(nextSpecies);
-    });
-
+  calculateOffspringDistribution() {
     const populationFitness = this.species.reduce((sum, species) => sum + species.getTotalFitness(), 0);
 
     const offspringDistribution = this.species.map(species => {
@@ -56,23 +71,26 @@ class Generation {
     });
 
     const error = POPULATION_SIZE - offspringDistribution.reduce((sum, n) => sum + n);
-    const delta = error > 0 ? +1 : -1;
+    const correctionDelta = error > 0 ? +1 : -1;
     let errorMagnitude = Math.abs(error);
+    
     for(let i = 0; errorMagnitude > 0; i++) {
       const speciesIdx = i % offspringDistribution.length;
       if (offspringDistribution[speciesIdx] !== 0) {
-        offspringDistribution[speciesIdx] += delta;
+        offspringDistribution[speciesIdx] += correctionDelta;
         errorMagnitude--;
       }
     }
 
-    console.log(offspringDistribution.reduce((a, b) => a + b)); // TODO
-
-    return nextGeneration;
+    return offspringDistribution;
   }
 }
 
-const g0 = Generation.makeInitialPopulation(POPULATION_SIZE);
 
-console.log(g0.species.length);
-g0.evolve();
+const g = new Generation();
+console.log(g.species.length);
+g.evolve();
+console.log(g.species.length);
+g.evolve();
+// console.log(g0.species.length);
+// g0.evolve();

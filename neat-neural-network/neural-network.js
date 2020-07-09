@@ -1,5 +1,6 @@
 const { 
-  sigmoid
+  sigmoid,
+  modifiedSigmoid
 } = require('../constants');
 
 // TODO what happens if there is a cycle?
@@ -73,7 +74,7 @@ class NeuralNetwork {
       if (node in inputActivations) {
         activation[node] = inputActivations[node];
       } else {
-        activation[node] = sigmoid(weightedSum);
+        activation[node] = modifiedSigmoid(weightedSum);
       }
 
       exploreNode(node);

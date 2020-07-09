@@ -56,6 +56,7 @@ const makeGetSeededRandomInt = () => {
 }
 
 const sigmoid = x => 1 / (1 + Math.E**(-x));
+const modifiedSigmoid = x  => 1 / (1 + Math.E**(-4.9 * x));
 
 const sleep = ms => {
   return new Promise((resolve) => {
@@ -89,12 +90,20 @@ module.exports = {
   SPECIES_CULL_RATE: 0.4,
   POPULATION_SIZE: 128,
   PERTURB_WEIGHT_DELTA: .03,
+  MUTATION_RATE: {
+    WEIGHT: 0.8,
+    WEIGHT_PERTURB: 0.9,
+    WEIGHT_ASSIGN: 0.1,
+    NEW_NODE: 0.03,
+    NEW_CONNECTION: 0.05 
+  },
   ALPHA: 'abcdefghijklmnopqrst',
   getRandom,
   getRandomInt,
   getRandomElement,
   makeGetSeededRandomInt,
   sigmoid,
+  modifiedSigmoid,
   sleep,
   GameOver
 }

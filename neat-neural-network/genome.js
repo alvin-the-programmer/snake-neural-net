@@ -22,9 +22,9 @@ class Genome {
       output: [],
       hidden: [],
     };
-
     this.connections = {};
     this.innovations = {};
+    this.fitness = null;
 
     for (let i = 1; i <= numInputs; i++) this.nodes.input.push(i);
 
@@ -199,8 +199,12 @@ class Genome {
   }
 
   getFitness() {
-    const fitnessLandscape = new FitnessLandscape(this.makeNeuralNetwork());
-    return fitnessLandscape.calculateFitness();
+    if (!this.fitness) {
+      const fitnessLandscape = new FitnessLandscape(this.makeNeuralNetwork());
+      this.fitness = fitnessLandscape.calculateFitness();
+    }
+
+    return this.fitness;
   }
 
   getInnovations() {
@@ -222,6 +226,7 @@ class Genome {
   }
 
   addConnectionMutation() {
+    this.fitness = null;
     const newEdgeId = getRandomElement(this.getNewEdgeCandidates());
 
     if (!newEdgeId) return null;
@@ -236,6 +241,7 @@ class Genome {
   }
 
   addNodeMutation() {
+    this.fitness = null;
     const oldEdgeId = getRandomElement(this.getExistingEdges());
     const [src, dst] = oldEdgeId.split(",");
     const newNode = this.getNodes().length + 1;
@@ -263,10 +269,12 @@ class Genome {
   }
 
   randomlyPerturbWeight(edge) {
+    this.fitness = null;
     this.connections[edge].weight += getRandom(-PERTURB_WEIGHT_DELTA, PERTURB_WEIGHT_DELTA);
   }
 
   randomlyAssignWeight(edge) {
+    this.fitness = null;
     this.connections[edge].weight = getRandom(-1, 1);
   }
 }
