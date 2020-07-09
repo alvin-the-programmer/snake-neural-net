@@ -1,4 +1,11 @@
-const { SPECIES_COMPATIBILITY_THRESHOLD, getRandomElement } = require('../constants');
+const { 
+  SPECIES_COMPATIBILITY_THRESHOLD, 
+  CROSSOVER_RATE,
+  MUTATION_RATE,
+  getRandomElement, 
+  randomChance 
+} = require('../constants');
+
 const Genome = require('./genome');
 
 class Species {
@@ -51,7 +58,7 @@ class Species {
     const numToKill = Math.floor(this.size() * cullRate);
 
     const weakMembers = Array.from(this.members)
-      .sort((a, b) => a.getFitness() - b.getFitness()) // this will be horribly slow
+      .sort((a, b) => a.getFitness() - b.getFitness())
       .slice(0, numToKill);
   
     weakMembers.forEach(weakling => this.members.delete(weakling));
@@ -66,15 +73,53 @@ class Species {
     return fittest;
   }
 
+  getRandomSample(sampleSize) {
+    if (sampleSize > this.size())
+      throw new Error('not enough species members to sample');
+
+    const sample = [];
+    const pool = new Set(this.members);
+    while (sample.length < sampleSize) {
+      const randomMember = getRandomElement(Array.from(pool));
+      sample.push(randomMember);
+      pool.delete(randomMember);
+    }
+    return sample;
+  }
+
   reproduce(numOffspring) {
     if (numOffspring === 0)
       return [];
 
-    const offspring = [ this.getFittestMember() ];
-    numOffspring--;
+    const offspring = [];
 
-  
-    // console.log(offspring[0]);
+    while (offspring.length < numOffspring - 1) {
+      if (randomChance(CROSSOVER_RATE) && this.size() >= 2) {
+        const [ parentA, parentB ] = this.getRandomSample(2);
+        const child = Genome.crossover(parentA, parentB);
+        offspring.push(child);
+      } else {
+        const [ parent ] = this.getRandomSample(1);
+        const [ child ] = Genome.makeClones(parent, 1);
+        offspring.push(child);
+      }
+    }
+
+    offspring.forEach(genome => {
+      if (randomChance(MUTATION_RATE.WEIGHT))
+        genome.modifyWeightMutation();
+
+      if (randomChance(MUTATION_RATE.NEW_NODE))
+        genome.addNodeMutation();
+
+      if (randomChance(MUTATION_RATE.NEW_CONNECTION))
+        genome.addConnectionMutation();
+    });
+
+    const [ champion ] = Genome.makeClones(this.getFittestMember(), 1);
+    offspring.push(champion);
+
+    return offspring;
   }
 }
 

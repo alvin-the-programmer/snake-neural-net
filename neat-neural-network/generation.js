@@ -34,10 +34,11 @@ class Generation {
 
     const offspringDistribution = this.calculateOffspringDistribution();
 
-    this.species.forEach(species => {
+    this.species.forEach((species, i) => {
+      const numOffspring = offspringDistribution[i];
       species.setRandomRepresentative();
       species.cullMembers(SPECIES_CULL_RATE);
-      species.reproduce();
+      species.reproduce(numOffspring);
     });
 
     this.genNumber++;
@@ -89,13 +90,5 @@ class Generation {
 
 const g = new Generation();
 g.evolve();
-const genomeA = g.species[0].representative;
-const genomeB = g.species[1].representative;
-console.log('parentA', genomeA);
-console.log('parentB', genomeB);
-console.log('offspring', Genome.crossover(genomeA, genomeB));
+g.evolve();
 
-// console.log(g.species.length);
-// g.evolve();
-// console.log(g0.species.length);
-// g0.evolve();

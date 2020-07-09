@@ -2,6 +2,7 @@ const {
   EXCESS_COEFFICIENT,
   DISJOINT_COEFFICIENT,
   WEIGHT_DIFF_COEFFICIENT,
+  MUTATION_RATE,
   PERTURB_WEIGHT_DELTA,
   INHERIT_DISABLED_GENE_RATE,
   getRandom,
@@ -274,6 +275,17 @@ class Genome {
       enabled: true,
     };
     this.innovations[innovation2] = newToDstEdgeId;
+  }
+
+  modifyWeightMutation() {
+    this.fitness = null;
+    this.getExistingEdges().forEach(edge => {
+      if (randomChance(MUTATION_RATE.WEIGHT_PERTURB)) {
+        this.randomlyPerturbWeight(edge);
+      } else {
+        this.randomlyAssignWeight(edge);
+      }
+    });
   }
 
   randomlyPerturbWeight(edge) {
