@@ -3,8 +3,10 @@ const {
   DISJOINT_COEFFICIENT,
   WEIGHT_DIFF_COEFFICIENT,
   PERTURB_WEIGHT_DELTA,
+  INHERIT_DISABLED_GENE_RATE,
   getRandom,
-  getRandomElement
+  getRandomElement,
+  randomChance,
 } = require('../constants');
 
 const NeuralNetwork = require('./neural-network');
@@ -44,15 +46,15 @@ class Genome {
     });
   }
 
-  static crossover(organismA, organismB) {
-    const { genome: genomeA, fitness: fitnessA } = organismA;
-    const { genome: genomeB, fitness: fitnessB } = organismB;
+  static crossover(genomeA, genomeB) {
+    const fitnessA = genomeA.getFitness();
+    const fitnessB = genomeB.getFitness();
     const comparison = Genome.compareInnovations(genomeA, genomeB);
     const inheritanceA = [];
     const inheritanceB = [];
 
     comparison.intersection.forEach(gene => {
-      getRandomElement([true, false]) ? inheritanceA.push(gene) : inheritanceB.push(gene);
+      randomChance(0.50) ? inheritanceA.push(gene) : inheritanceB.push(gene);
     });
 
     if (fitnessA > fitnessB) {
@@ -67,12 +69,18 @@ class Genome {
       const edge = genomeA.innovations[gene];
       offspringGenome.innovations[gene] = edge;
       offspringGenome.connections[edge] = { ...genomeA.connections[edge] };
+
+      if (genomeA.connections[edge].enabled === false && randomChance(1 - INHERIT_DISABLED_GENE_RATE))
+        offspringGenome.connections[edge].enabled = true;
     });
 
     inheritanceB.forEach(gene => {
       const edge = genomeB.innovations[gene];
       offspringGenome.innovations[gene] = edge;
       offspringGenome.connections[edge] = { ...genomeB.connections[edge] };
+
+      if (genomeB.connections[edge].enabled === false && randomChance(1 - INHERIT_DISABLED_GENE_RATE))
+        offspringGenome.connections[edge].enabled = true;
     });
 
     return offspringGenome;

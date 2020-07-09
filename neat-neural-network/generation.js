@@ -88,9 +88,14 @@ class Generation {
 
 
 const g = new Generation();
-console.log(g.species.length);
 g.evolve();
-console.log(g.species.length);
-g.evolve();
+const genomeA = g.species[0].representative;
+const genomeB = g.species[1].representative;
+console.log('parentA', genomeA);
+console.log('parentB', genomeB);
+console.log('offspring', Genome.crossover(genomeA, genomeB));
+
+// console.log(g.species.length);
+// g.evolve();
 // console.log(g0.species.length);
 // g0.evolve();

@@ -18,6 +18,8 @@ const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min
 
 const getRandomElement = (array) => array[getRandomInt(0, array.length)];
 
+const randomChance = (rateTrue) => getRandom(0, 1) < rateTrue;
+
 // ---- start borrowing
 //  why doesn't js come with a seeded random? ¯\_(ツ)_/¯
 //  https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
@@ -90,6 +92,9 @@ module.exports = {
   SPECIES_CULL_RATE: 0.4,
   POPULATION_SIZE: 128,
   PERTURB_WEIGHT_DELTA: .03,
+  CROSSOVER_RATE: 0.75,
+  CLONING_RATE: 0.25,
+  INHERIT_DISABLED_GENE_RATE: 0.75,
   MUTATION_RATE: {
     WEIGHT: 0.8,
     WEIGHT_PERTURB: 0.9,
@@ -101,9 +106,10 @@ module.exports = {
   getRandom,
   getRandomInt,
   getRandomElement,
+  randomChance,
   makeGetSeededRandomInt,
   sigmoid,
   modifiedSigmoid,
   sleep,
   GameOver
-}
+};
