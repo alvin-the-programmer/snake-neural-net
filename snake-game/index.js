@@ -42,12 +42,41 @@ class SnakeGame {
   }
 
   getState() {
-    const state = {
-      head: this.snake.positions[0],
-      food: this.foodPos
-    };
+    const { forwardDistance, leftDistance, rightDistance } = this.foodDistance();
 
-    return [ ...state.head, ...state.food ];
+    return [ leftDistance, forwardDistance, rightDistance ];
+  }
+
+  foodDistance () {
+    const [ headRow, headCol ] = this.snake.positions[0];
+    const [ foodRow, foodCol ] = this.foodPos;
+    const verticalDistance = headRow - foodRow;
+    const horizontalDistance = headCol - foodCol;
+    if (this.snake.angle === 0) {
+      return {
+        forwardDistance: verticalDistance >= 0 ? verticalDistance : null, 
+        leftDistance: horizontalDistance >= 0 ? horizontalDistance : null,
+        rightDistance: horizontalDistance <= 0 ? Math.abs(horizontalDistance) : null
+      }
+    } else if (this.snake.angle === 90) {
+      return {
+        forwardDistance: horizontalDistance <= 0 ? Math.abs(horizontalDistance) : null, 
+        leftDistance: verticalDistance >= 0 ? verticalDistance : null,
+        rightDistance: verticalDistance <= 0 ? Math.abs(verticalDistance) : null
+      }
+    } else if (this.snake.angle === 180) {
+      return {
+        forwardDistance: verticalDistance <= 0 ? Math.abs(verticalDistance) : null,
+        leftDistance: horizontalDistance <= 0 ? Math.abs(horizontalDistance) : null,
+        rightDistance: horizontalDistance >= 0 ? horizontalDistance : null,
+      }
+    } else if (this.snake.angle === 270) {
+      return {
+        forwardDistance: horizontalDistance >= 0 ? horizontalDistance : null,
+        leftDistance: verticalDistance <= 0 ? Math.abs(verticalDistance) : null,
+        rightDistance: verticalDistance >= 0 ? verticalDistance : null,
+      }
+    }
   }
   
   availablePositions() {
@@ -93,7 +122,6 @@ class SnakeGame {
     console.log('fitness:', this.fitness);
     console.log('food_score:', this.food_score);
     console.log('state:', this.getState());
-    console.log(this.snake.angle);
   }
 
   simulate() {

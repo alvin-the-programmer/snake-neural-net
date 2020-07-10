@@ -13,7 +13,7 @@ class Snake {
       [ startRow, startCol ]
     ];
 
-    this.angle = 90;
+    this.angle = 0;
   };
 
 
