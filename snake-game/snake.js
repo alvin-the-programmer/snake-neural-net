@@ -13,29 +13,40 @@ class Snake {
       [ startRow, startCol ]
     ];
 
-    this.right();
+    this.angle = 90;
   };
 
-  up() {
-    this.direction = { x: 0, y: -1 };
+
+  turnLeft() {
+    this.angle = this.angle - 90;
+    if (this.angle < 0)
+      this.angle = 360 - Math.abs(this.angle);
   }
 
-  down() {
-    this.direction = { x: 0, y: 1 };
+  turnRight() {
+    this.angle = this.angle + 90;
+    if (this.angle >= 360)
+      this.angle = this.angle - 360;
   }
 
-  left() {
-    this.direction = { x: -1, y: 0 };
-  }
-
-  right() {
-    this.direction = { x: 1, y: 0 };
+  straight() {
+    this.angle = this.angle;
   }
 
   move(foodPos) {
     const [ head, ...body ] = this.positions;
     const [ headRow, headCol ] = head;
-    const newHeadPos = [ headRow + this.direction.y, headCol + this.direction.x ];
+    const delta = {
+      0: { x: 0, y: -1 },
+      90: { x: 1, y: 0 },
+      180: { x: 0, y: 1 },
+      270: { x: -1, y: 0 }
+    };
+
+    console.log(this.angle);
+    const change = delta[this.angle];
+
+    const newHeadPos = [ headRow + change.y, headCol + change.x ];
 
     if (this.isCollision(newHeadPos))
       throw new GameOver('collision made'); 

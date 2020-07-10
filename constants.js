@@ -1,8 +1,21 @@
 const DIRECTION = {
-  UP: 'up',
-  DOWN: 'down',
-  LEFT: 'left',
-  RIGHT: 'right'
+  STRAIGHT: 'straight',
+  TURN_LEFT: 'turnLeft',
+  TURN_RIGHT: 'turnRight'
+};
+
+const SNAKE_ORIENTATION_SYMBOL = {
+  0: '↑',
+  90: '→',
+  180: '↓',
+  270: '←'
+};
+
+const delta = {
+  0: { x: 0, y: -1 },
+  90: { x: 1, y: 0 },
+  180: { x: 0, y: 1 },
+  270: { x: -1, y: 0 }
 };
 
 const NODE_DIRECTION_MAP = {
@@ -76,6 +89,7 @@ class GameOver extends Error {
 module.exports = {
   DIRECTION,
   NODE_DIRECTION_MAP,
+  SNAKE_ORIENTATION_SYMBOL,
   WIDTH: 20,
   HEIGHT: 20,
   SNAKE_START_POS: [5, 5],

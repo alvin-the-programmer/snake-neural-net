@@ -6,6 +6,7 @@ const {
   SNAKE_START_POS, 
   START_HEALTH,
   MAX_HEALTH,
+  SNAKE_ORIENTATION_SYMBOL,
   makeGetSeededRandomInt,
   GameOver,
 } = require('../constants');
@@ -73,7 +74,13 @@ class SnakeGame {
     });
     console.log(colHeader);
 
-    this.snake.positions.forEach(([row, col]) => this.grid[row][col] = '█');
+    this.snake.positions.forEach(([row, col], i) => {
+      if (i === 0) {
+        this.grid[row][col] = SNAKE_ORIENTATION_SYMBOL[this.snake.angle];
+      } else {
+        this.grid[row][col] = '█';
+      }
+    });
 
     const [ foodRow, foodCol ] = this.foodPos;
     this.grid[foodRow][foodCol] = '●';
@@ -86,6 +93,7 @@ class SnakeGame {
     console.log('fitness:', this.fitness);
     console.log('food_score:', this.food_score);
     console.log('state:', this.getState());
+    console.log(this.snake.angle);
   }
 
   simulate() {
@@ -117,13 +125,11 @@ class SnakeGame {
       if (key === '\u0003')
         process.exit();
       if (key === 'w')
-        this.input(DIRECTION.UP);
+        this.input(DIRECTION.STRAIGHT);
       if (key === 'a')
-        this.input(DIRECTION.LEFT);
-      if (key === 's')
-        this.input(DIRECTION.DOWN);
+        this.input(DIRECTION.TURN_LEFT);
       if (key === 'd')
-        this.input(DIRECTION.RIGHT);
+        this.input(DIRECTION.TURN_RIGHT);
         this.simulate();
         this.draw();
     });
