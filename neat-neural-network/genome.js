@@ -216,6 +216,11 @@ class Genome {
     return this.fitness;
   }
 
+  animate() {
+    const fitnessLandscape = new FitnessLandscape(this.makeNeuralNetwork());
+    fitnessLandscape.animate();
+  }
+
   getInnovations() {
     return Object.values(this.connections).map((connection) => connection.innovation);
   }

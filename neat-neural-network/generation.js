@@ -12,7 +12,7 @@ const Species = require('./species');
 class Generation {
   constructor() {
     this.species = [];
-    this.genNumber = 0;
+    this.genNumber = -1;
   }
 
   static makeInitialPopulation() {
@@ -24,27 +24,47 @@ class Generation {
     });
   }
 
+  simulateEvolution(numberGenerations) {
+    for (let i = 0; i < numberGenerations; i++) {
+      this.evolve();
+      const champions = this.species.map(species => species.getFittestMember());
+      const champFitnesses = champions.map(champ => {
+        const fitness = champ.getFitness();
+        if (fitness > 101)
+          champ.animate();
+        return fitness;
+      });
+      console.log(champFitnesses);
+    }
+    
+  }
+
   evolve() {
+    this.genNumber++;
+
     if (this.genNumber === 0) {
-      const initialPop = Generation.makeInitialPopulation();
-      this.speciate(initialPop);
-      this.genNumber++;
+      const initialPopulation = Generation.makeInitialPopulation();
+      this.speciate(initialPopulation);
       return;
     }
 
     const offspringDistribution = this.calculateOffspringDistribution();
+    const nextPopulation = [];
 
     this.species.forEach((species, i) => {
       const numOffspring = offspringDistribution[i];
       species.setRandomRepresentative();
       species.cullMembers(SPECIES_CULL_RATE);
-      species.reproduce(numOffspring);
+      const newMembers = species.reproduce(numOffspring);
+      nextPopulation.push(...newMembers);
     });
 
-    this.genNumber++;
+    this.speciate(nextPopulation);
   }
 
   speciate(genomes) {
+    this.species.forEach(species => species.eradicateMembers());
+
     genomes.forEach(genome => {
       for (const edge in genome.connections)
         genome.randomlyAssignWeight(edge);
@@ -61,6 +81,8 @@ class Generation {
       if (!compatibleSpeciesFound)
         this.species.push(new Species(genome));
     });
+
+    this.species = this.species.filter(species => !species.isExtinct());
   }
 
   calculateOffspringDistribution() {
@@ -88,7 +110,10 @@ class Generation {
 }
 
 
-const g = new Generation();
-g.evolve();
-g.evolve();
+const generation = new Generation();
+// generation.simulateEvolution(1000);
+
+
+
+
 

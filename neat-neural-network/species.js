@@ -31,11 +31,15 @@ class Species {
   }
 
   getRandomMember() {
-    return getRandomElement(this.members);
+    return getRandomElement(Array.from(this.members));
   }
 
   size() {
     return this.members.size;
+  }
+
+  eradicateMembers() {
+    this.members = new Set();
   }
 
   getAdjustedFitness(genome) {

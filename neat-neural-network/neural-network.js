@@ -52,8 +52,9 @@ class NeuralNetwork {
     const exploreNode = node => {
       for (let dstNode of this.outputMap[node]) {
         inactiveIngress[dstNode].delete(node);
-        if (inactiveIngress[dstNode].size === 0)
+        if (inactiveIngress[dstNode].size === 0 && !(dstNode in activation)){
           readyToActivate.push(dstNode);
+        }
       }
     };
     
