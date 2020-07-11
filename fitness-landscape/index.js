@@ -50,7 +50,7 @@ class FitnessLandscape {
       try {
         game.simulate();
         game.draw();
-        await sleep(30);
+        await sleep(15);
       } catch (error) {
         if (error instanceof GameOver) {
           console.log('GAME OVER!');
