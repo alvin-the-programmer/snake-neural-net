@@ -17,14 +17,6 @@ const SNAKE_ORIENTATION_SYMBOL = {
   270: '←'
 };
 
-const getRandom = (min, max) => Math.random() * (max - min) + min;
-
-const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min)) + min;
-
-const getRandomElement = (array) => array[getRandomInt(0, array.length)];
-
-const randomChance = (rateTrue) => getRandom(0, 1) < rateTrue;
-
 // ---- start borrowing
 //  why doesn't js come with a seeded random? ¯\_(ツ)_/¯
 //  https://stackoverflow.com/questions/521295/seeding-the-random-number-generator-in-javascript
@@ -55,6 +47,19 @@ const sfc32 = (a, b, c, d) => {
   }
 };
 // ---- end borrowing
+
+
+const seed = xmur3("for reproducible results!");
+
+Math.random = sfc32(seed(), seed(), seed(), seed());
+
+const getRandom = (min, max) => Math.random() * (max - min) + min;
+
+const getRandomInt = (min, max) => Math.floor(getRandom(min, max));
+
+const getRandomElement = (array) => array[getRandomInt(0, array.length)];
+
+const randomChance = (rateTrue) => getRandom(0, 1) < rateTrue;
 
 const makeGetSeededRandomInt = () => {
   const seed = xmur3("HeY_Pr0gRamMeRS");
@@ -91,16 +96,16 @@ module.exports = {
   SNAKE_GROW: true,
   START_HEALTH: 50,
   MAX_HEALTH: 50,
-  MAX_FITNESS: 30,
+  MAX_FITNESS: 35,
   NUM_INPUTS: 6,
   NUM_OUTPUTS: 3,
-  NUMBER_GENERATIONS: 40,
-  EXCESS_COEFFICIENT: 2,
-  DISJOINT_COEFFICIENT: 2,
-  WEIGHT_DIFF_COEFFICIENT: 0.3,
+  NUMBER_GENERATIONS: 32,
+  EXCESS_COEFFICIENT: 12,
+  DISJOINT_COEFFICIENT: 12,
+  WEIGHT_DIFF_COEFFICIENT: 0.5,
   SPECIES_COMPATIBILITY_THRESHOLD: 3,
   SPECIES_EXTINCTION_THRESHOLD: 3,
-  SPECIES_CULL_RATE: 0.2,
+  SPECIES_CULL_RATE: 0.5,
   POPULATION_SIZE: 150,
   PERTURB_WEIGHT_DELTA: .03,
   CROSSOVER_RATE: 0.75,
