@@ -28,8 +28,12 @@ class Generation {
 
   async simulateEvolution(numberGenerations) {
     console.clear();
+    console.log(`Evolving ${numberGenerations} generations...\n`);
     console.log('Generation'.rJust(14, ' '), 'Different Species'.rJust(19, ' '), 'Network Fitnesses'.rJust(20, ' '), 'Network Complexities');
     console.log(''.rJust(79, '-'));
+
+    let strongest = null;
+
     for (let i = 0; i < numberGenerations; i++) {
       this.evolve();
 
@@ -41,21 +45,28 @@ class Generation {
         const fitness = champ.getFitness();
         champFitnesses.push(fitness);
         champSizes.push(champ.size());
+        if (strongest === null || fitness > strongest.getFitness()) {
+          strongest = champ;
+        }
       }
 
       console.log(`Gen-${i}`.rJust(14, ' '), `${champFitnesses.length}`.rJust(19, ' '),  champFitnesses.join(',').rJust(20, ' '), champSizes.join(','));
 
       const solution = champions.filter((_, i) => champFitnesses[i] >= MAX_FITNESS)[0];
       if (solution) {
-        console.log('');
-        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<< FITNESS THRESHOLD REACHED >>>>>>>>>>>>>>>>>>>>>>>>>>');
-        console.log('');
-        console.log('...beginning simulation');
-        await sleep(3000);
-        await solution.animate();
+        console.log('\n<<<<<<<<<<<<<<<<<<<<<<<<<< FITNESS THRESHOLD REACHED >>>>>>>>>>>>>>>>>>>>>>>>>>\n');
+        await this.simulateGenome(solution);
         break;
       }
     }
+
+    await this.simulateGenome(strongest);
+  }
+
+  async simulateGenome(genome) {
+    console.log('...beginning simulation');
+    await sleep(2000);
+    await genome.animate();
   }
 
   evolve() {
