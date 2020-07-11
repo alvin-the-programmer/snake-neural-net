@@ -88,7 +88,7 @@ module.exports = {
   WIDTH: 20,
   HEIGHT: 20,
   SNAKE_START_POS: [5, 5],
-  SNAKE_GROW: false,
+  SNAKE_GROW: true,
   START_HEALTH: 50,
   MAX_HEALTH: 50,
   MAX_FITNESS: 300,
