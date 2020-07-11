@@ -44,17 +44,20 @@ class SnakeGame {
 
   getNeuralNetInputState() {
     const { forwardDistance, leftDistance, rightDistance } = this.foodDistance();
-    
-    return [ leftDistance, forwardDistance, rightDistance ]
-      .map(n => Number(distanceNormalizer(n).toFixed(4)))
+
+    const foodDistances = [ leftDistance, forwardDistance, rightDistance ]
+      .map(n => Number(distanceNormalizer(n).toFixed(6)));
+
+    const adjacentObstacles = [ this.isLeftObstacle(), this.isForwardObstacle() ,this.isRightObstacle()];
+    return [ ...foodDistances, ...adjacentObstacles ];
   }
 
-  foodDistance () {
+  foodDistance() {
     const [ headRow, headCol ] = this.snake.positions[0];
     const [ foodRow, foodCol ] = this.foodPos;
     const verticalDistance = headRow - foodRow;
     const horizontalDistance = headCol - foodCol;
-    if (this.snake.angle === 0) {
+    if (this.snake.angle === 0) { // not clever enough to make this clean ¯\_(ツ)_/¯
       return {
         forwardDistance: verticalDistance >= 0 ? verticalDistance : null, 
         leftDistance: horizontalDistance >= 0 ? horizontalDistance : null,
@@ -80,7 +83,61 @@ class SnakeGame {
       }
     }
   }
-  
+
+  obstacleDistance() {
+    const [ headRow, headCol ] = this.snake.positions[0];
+
+  }
+
+  isForwardObstacle() {
+    const [ headRow, headCol ] = this.snake.positions[0];
+
+    if (this.snake.angle === 0) {
+      return this.isObstacle(headRow - 1, headCol);
+    } else if (this.snake.angle === 90) {
+      return this.isObstacle(headRow, headCol + 1);
+    } else if (this.snake.angle === 180) {
+      return this.isObstacle(headRow + 1, headCol);
+    } else if (this.snake.angle === 270) {
+      return this.isObstacle(headRow, headCol - 1);
+    }
+  }
+
+  isLeftObstacle() {
+    const [ headRow, headCol ] = this.snake.positions[0];
+
+    if (this.snake.angle === 0) {
+      return this.isObstacle(headRow, headCol - 1);
+    } else if (this.snake.angle === 90) {
+      return this.isObstacle(headRow - 1, headCol);
+    } else if (this.snake.angle === 180) {
+      return this.isObstacle(headRow, headCol + 1);
+    } else if (this.snake.angle === 270) {
+      return this.isObstacle(headRow + 1, headCol);
+    }
+  }
+
+  isRightObstacle() {
+    const [ headRow, headCol ] = this.snake.positions[0];
+
+    if (this.snake.angle === 0) {
+      return this.isObstacle(headRow, headCol + 1);
+    } else if (this.snake.angle === 90) {
+      return this.isObstacle(headRow + 1, headCol);
+    } else if (this.snake.angle === 180) {
+      return this.isObstacle(headRow, headCol - 1);
+    } else if (this.snake.angle === 270) {
+      return this.isObstacle(headRow + -1, headCol);
+    }
+  }
+
+  isObstacle(row, col) {
+    const snakePositions = new Set(this.snake.positions.map(pos => String(pos)));
+    const isSnake = snakePositions.has(String([row, col]));
+    const isWall = row === -1 || row === HEIGHT || col === -1 || col === WIDTH;
+    return isSnake || isWall ? 1 : 0;
+  }
+
   availablePositions() {
     const snakePositions = new Set(this.snake.positions.map(String));
     return SnakeGame.allPositions().filter(pos => !snakePositions.has(String(pos)));

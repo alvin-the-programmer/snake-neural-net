@@ -5,9 +5,9 @@ const DIRECTION = {
 };
 
 const OUTPUT_NODE_MAP = {
-  4: DIRECTION.STRAIGHT,
-  5: DIRECTION.TURN_LEFT,
-  6: DIRECTION.TURN_RIGHT
+  7: DIRECTION.STRAIGHT,
+  8: DIRECTION.TURN_LEFT,
+  9: DIRECTION.TURN_RIGHT
 };
 
 const SNAKE_ORIENTATION_SYMBOL = {
@@ -57,7 +57,7 @@ const sfc32 = (a, b, c, d) => {
 // ---- end borrowing
 
 const makeGetSeededRandomInt = () => {
-  const seed = xmur3("HeY_Pr0gRamMerS");
+  const seed = xmur3("HeY_Pr0gRamMeRS");
   const getSeededRandom = sfc32(seed(), seed(), seed(), seed());
   return (min, max) => Math.floor(getSeededRandom() * (max - min)) + min;
 }
@@ -66,7 +66,7 @@ const sigmoid = x => 1 / (1 + Math.E**(-x));
 
 const modifiedSigmoid = x => 1 / (1 + Math.E**(-4.9 * x));
 
-const distanceNormalizer = x => Math.log(x + 1) / Math.log(20);
+const distanceNormalizer = x => Math.log(x + 1) / Math.log(21);
 
 const sleep = ms => {
   return new Promise((resolve) => {
@@ -91,16 +91,16 @@ module.exports = {
   SNAKE_GROW: true,
   START_HEALTH: 50,
   MAX_HEALTH: 50,
-  MAX_FITNESS: 300,
-  NUM_INPUTS: 3,
+  MAX_FITNESS: 30,
+  NUM_INPUTS: 6,
   NUM_OUTPUTS: 3,
-  NUMBER_GENERATIONS: 20,
-  EXCESS_COEFFICIENT: 5,
-  DISJOINT_COEFFICIENT: 5,
+  NUMBER_GENERATIONS: 40,
+  EXCESS_COEFFICIENT: 2,
+  DISJOINT_COEFFICIENT: 2,
   WEIGHT_DIFF_COEFFICIENT: 0.3,
   SPECIES_COMPATIBILITY_THRESHOLD: 3,
   SPECIES_EXTINCTION_THRESHOLD: 3,
-  SPECIES_CULL_RATE: 0.1,
+  SPECIES_CULL_RATE: 0.2,
   POPULATION_SIZE: 150,
   PERTURB_WEIGHT_DELTA: .03,
   CROSSOVER_RATE: 0.75,
