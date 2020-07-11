@@ -16,7 +16,7 @@ class FitnessLandscape {
 
     while (true) {
       const inputs = {};
-      const state = game.getState();
+      const state = game.getNeuralNetInputState();
       this.neuralNetwork.nodes.input.forEach((node, i) => inputs[node] = state[i]);
       const outputNode = this.neuralNetwork.getOutput(inputs);
       const direction = OUTPUT_NODE_MAP[outputNode];
@@ -41,7 +41,7 @@ class FitnessLandscape {
 
     while (true) {
       const inputs = {};
-      const state = game.getState();
+      const state = game.getNeuralNetInputState();
       this.neuralNetwork.nodes.input.forEach((node, i) => inputs[node] = state[i]);
       const outputNode = this.neuralNetwork.getOutput(inputs);
       const direction = OUTPUT_NODE_MAP[outputNode];

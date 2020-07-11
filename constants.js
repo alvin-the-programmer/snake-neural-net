@@ -63,7 +63,10 @@ const makeGetSeededRandomInt = () => {
 }
 
 const sigmoid = x => 1 / (1 + Math.E**(-x));
-const modifiedSigmoid = x  => 1 / (1 + Math.E**(-4.9 * x));
+
+const modifiedSigmoid = x => 1 / (1 + Math.E**(-4.9 * x));
+
+const distanceNormalizer = x => Math.log(x + 1) / Math.log(20);
 
 const sleep = ms => {
   return new Promise((resolve) => {
@@ -115,6 +118,7 @@ module.exports = {
   makeGetSeededRandomInt,
   sigmoid,
   modifiedSigmoid,
+  distanceNormalizer,
   sleep,
   GameOver
 };

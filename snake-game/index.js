@@ -9,6 +9,7 @@ const {
   MAX_FITNESS,
   SNAKE_ORIENTATION_SYMBOL,
   makeGetSeededRandomInt,
+  distanceNormalizer,
   GameOver,
 } = require('../constants');
 
@@ -41,10 +42,11 @@ class SnakeGame {
     return row * WIDTH + col;
   }
 
-  getState() {
+  getNeuralNetInputState() {
     const { forwardDistance, leftDistance, rightDistance } = this.foodDistance();
-
-    return [ leftDistance, forwardDistance, rightDistance ];
+    
+    return [ leftDistance, forwardDistance, rightDistance ]
+      .map(n => Number(distanceNormalizer(n).toFixed(4)))
   }
 
   foodDistance () {
@@ -120,7 +122,7 @@ class SnakeGame {
 
     console.log('health:', this.health + '/' + MAX_HEALTH);
     console.log('foodScore:', this.foodScore);
-    console.log('state:', this.getState());
+    console.log('neuralNetInput:', this.getNeuralNetInputState());
   }
 
   simulate() {
