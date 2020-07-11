@@ -1,6 +1,2 @@
-const SnakeGame = require('./snake-game');
-
-const game = new SnakeGame();
-game.debug();
-
-
+const Generation = require('./neat-neural-network/generation');
+(new Generation()).simulateEvolution(30);

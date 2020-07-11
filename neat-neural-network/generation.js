@@ -136,10 +136,4 @@ String.prototype.rJust = function(length, char) {
   return this + fill.join('');
 };
 
-const generation = new Generation();
-generation.simulateEvolution(30);
-
-
-
-
-
+module.exports = Generation;
