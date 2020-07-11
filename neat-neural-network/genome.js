@@ -216,9 +216,9 @@ class Genome {
     return this.fitness;
   }
 
-  animate() {
+  async animate() {
     const fitnessLandscape = new FitnessLandscape(this.makeNeuralNetwork());
-    fitnessLandscape.animate();
+    await fitnessLandscape.animate();
   }
 
   getInnovations() {

@@ -1,8 +1,7 @@
 
 const { 
-  NODE_DIRECTION_MAP,
+  OUTPUT_NODE_MAP,
   GameOver,
-  getRandom,
   sleep
 } = require('../constants');
 
@@ -22,7 +21,7 @@ class FitnessLandscape {
       const state = game.getState();
       this.neuralNetwork.nodes.input.forEach((node, i) => inputs[node] = state[i]);
       const outputNode = this.neuralNetwork.getOutput(inputs);
-      const direction = NODE_DIRECTION_MAP[outputNode];
+      const direction = OUTPUT_NODE_MAP[outputNode];
       game.input(direction);
 
       try {
@@ -36,7 +35,7 @@ class FitnessLandscape {
       }
     } 
 
-    return game.fitness;
+    return game.foodScore;
   }
 
   async animate() {
@@ -47,7 +46,7 @@ class FitnessLandscape {
       const state = game.getState();
       this.neuralNetwork.nodes.input.forEach((node, i) => inputs[node] = state[i]);
       const outputNode = this.neuralNetwork.getOutput(inputs);
-      const direction = NODE_DIRECTION_MAP[outputNode];
+      const direction = OUTPUT_NODE_MAP[outputNode];
       game.input(direction);
 
       try {
@@ -66,7 +65,7 @@ class FitnessLandscape {
     console.log({ 
       nodes: this.neuralNetwork.nodes,
       connections: this.neuralNetwork.connections,
-      fitness: game.fitness 
+      fitness: game.foodScore
     });
   }
 }

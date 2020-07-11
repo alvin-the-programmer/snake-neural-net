@@ -6,6 +6,7 @@ const {
   SNAKE_START_POS, 
   START_HEALTH,
   MAX_HEALTH,
+  MAX_FITNESS,
   SNAKE_ORIENTATION_SYMBOL,
   makeGetSeededRandomInt,
   GameOver,
@@ -19,8 +20,7 @@ class SnakeGame {
     this.snake = new Snake(SNAKE_START_POS);
     this.fillGrid();
     this.health = START_HEALTH;
-    this.fitness = 0;
-    this.food_score = 0;
+    this.foodScore = 0;
     this.getSeededRandomInt = makeGetSeededRandomInt();
     this.foodPos = null;
     this.placeRandomFood();
@@ -119,23 +119,24 @@ class SnakeGame {
     });
 
     console.log('health:', this.health + '/' + MAX_HEALTH);
-    console.log('fitness:', this.fitness);
-    console.log('food_score:', this.food_score);
+    console.log('foodScore:', this.foodScore);
     console.log('state:', this.getState());
   }
 
   simulate() {
     this.health--;
-    this.fitness++;
 
     if (this.snake.move(this.foodPos)) {
-      this.food_score++;
+      this.foodScore++;
       this.health = Math.min(this.health + 51, MAX_HEALTH);
       this.placeRandomFood();
     }
 
     if (this.health === 0)
       throw new GameOver('zero health reached');
+
+    if (this.foodScore === MAX_FITNESS)
+      throw new GameOver('max score reached');
   }
 
   input(direction) {

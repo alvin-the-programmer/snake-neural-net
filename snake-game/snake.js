@@ -43,7 +43,6 @@ class Snake {
       270: { x: -1, y: 0 }
     };
 
-    console.log(this.angle);
     const change = delta[this.angle];
 
     const newHeadPos = [ headRow + change.y, headCol + change.x ];

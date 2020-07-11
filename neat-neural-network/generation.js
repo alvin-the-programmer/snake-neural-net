@@ -4,6 +4,8 @@ const {
   POPULATION_SIZE,
   SPECIES_EXTINCTION_THRESHOLD,
   SPECIES_CULL_RATE,
+  MAX_FITNESS,
+  sleep
 } = require('../constants');
 
 const Genome = require('./genome');
@@ -24,19 +26,36 @@ class Generation {
     });
   }
 
-  simulateEvolution(numberGenerations) {
+  async simulateEvolution(numberGenerations) {
+    console.clear();
+    console.log('Generation'.rJust(14, ' '), 'Different Species'.rJust(19, ' '), 'Network Fitnesses'.rJust(20, ' '), 'Network Complexities');
+    console.log(''.rJust(79, '-'));
     for (let i = 0; i < numberGenerations; i++) {
       this.evolve();
+
       const champions = this.species.map(species => species.getFittestMember());
-      const champFitnesses = champions.map(champ => {
+      const champFitnesses = [];
+      const champSizes = [];
+
+      for (let champ of champions) {
         const fitness = champ.getFitness();
-        if (fitness > 101)
-          champ.animate();
-        return fitness;
-      });
-      console.log(champFitnesses);
+        champFitnesses.push(fitness);
+        champSizes.push(champ.size());
+      }
+
+      console.log(`Gen-${i}`.rJust(14, ' '), `${champFitnesses.length}`.rJust(19, ' '),  champFitnesses.join(',').rJust(20, ' '), champSizes.join(','));
+
+      const solution = champions.filter((_, i) => champFitnesses[i] >= MAX_FITNESS)[0];
+      if (solution) {
+        console.log('');
+        console.log('<<<<<<<<<<<<<<<<<<<<<<<<<< FITNESS THRESHOLD REACHED >>>>>>>>>>>>>>>>>>>>>>>>>>');
+        console.log('');
+        console.log('...beginning simulation');
+        await sleep(3000);
+        await solution.animate();
+        break;
+      }
     }
-    
   }
 
   evolve() {
@@ -109,9 +128,16 @@ class Generation {
   }
 }
 
+String.prototype.rJust = function(length, char) {
+  const fill = [];
+  while (fill.length + this.length < length) {
+    fill[fill.length] = char;
+  }
+  return this + fill.join('');
+};
 
 const generation = new Generation();
-// generation.simulateEvolution(1000);
+generation.simulateEvolution(30);
 
 
 

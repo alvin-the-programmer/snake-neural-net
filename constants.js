@@ -4,25 +4,17 @@ const DIRECTION = {
   TURN_RIGHT: 'turnRight'
 };
 
+const OUTPUT_NODE_MAP = {
+  4: DIRECTION.STRAIGHT,
+  5: DIRECTION.TURN_LEFT,
+  6: DIRECTION.TURN_RIGHT
+};
+
 const SNAKE_ORIENTATION_SYMBOL = {
   0: '↑',
   90: '→',
   180: '↓',
   270: '←'
-};
-
-const delta = {
-  0: { x: 0, y: -1 },
-  90: { x: 1, y: 0 },
-  180: { x: 0, y: 1 },
-  270: { x: -1, y: 0 }
-};
-
-const NODE_DIRECTION_MAP = {
-  5: DIRECTION.UP,
-  6: DIRECTION.DOWN,
-  7: DIRECTION.LEFT,
-  8: DIRECTION.RIGHT
 };
 
 const getRandom = (min, max) => Math.random() * (max - min) + min;
@@ -88,22 +80,23 @@ class GameOver extends Error {
 
 module.exports = {
   DIRECTION,
-  NODE_DIRECTION_MAP,
+  OUTPUT_NODE_MAP,
   SNAKE_ORIENTATION_SYMBOL,
   WIDTH: 20,
   HEIGHT: 20,
   SNAKE_START_POS: [5, 5],
   SNAKE_GROW: false,
   START_HEALTH: 50,
-  MAX_HEALTH: 400,
-  NUM_INPUTS: 4,
-  NUM_OUTPUTS: 4,
+  MAX_HEALTH: 50,
+  MAX_FITNESS: 300,
+  NUM_INPUTS: 3,
+  NUM_OUTPUTS: 3,
   EXCESS_COEFFICIENT: 1,
   DISJOINT_COEFFICIENT: 1,
   WEIGHT_DIFF_COEFFICIENT: 0.3,
   SPECIES_COMPATIBILITY_THRESHOLD: 3,
   SPECIES_EXTINCTION_THRESHOLD: 4,
-  SPECIES_CULL_RATE: 0.2,
+  SPECIES_CULL_RATE: 0.1,
   POPULATION_SIZE: 150,
   PERTURB_WEIGHT_DELTA: .03,
   CROSSOVER_RATE: 0.75,
