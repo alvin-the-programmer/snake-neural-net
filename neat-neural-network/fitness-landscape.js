@@ -1,10 +1,13 @@
 const { 
   OUTPUT_NODE_MAP,
+  LOG_FITNESS_THRESHOLD,
   GameOver,
-  sleep
+  sleep,
+  uuidv4,
 } = require('../constants');
 
 const SnakeGame = require('../snake-game');
+const fs = require('fs');
 
 class FitnessLandscape {
   constructor(neuralNetwork) {
@@ -32,6 +35,14 @@ class FitnessLandscape {
         }
       }
     } 
+
+    if (game.foodScore >= LOG_FITNESS_THRESHOLD) {
+      const speciesId = `./logs/${game.foodScore}-${uuidv4()}.json`;
+      const neuralNetData = JSON.stringify(this.neuralNetwork);
+      fs.writeFile(speciesId, neuralNetData, {flag: 'w'}, (err) => {
+        if (err) throw err;
+      });
+    }
 
     return game.foodScore;
   }

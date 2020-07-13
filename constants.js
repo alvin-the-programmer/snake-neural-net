@@ -46,6 +46,14 @@ const sfc32 = (a, b, c, d) => {
     return (t >>> 0) / 4294967296;
   }
 };
+
+const uuidv4 = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 // ---- end borrowing
 
 
@@ -97,12 +105,13 @@ module.exports = {
   START_HEALTH: 50,
   MAX_HEALTH: 50,
   MAX_FITNESS: 50,
+  LOG_FITNESS_THRESHOLD: 20,
   NUM_INPUTS: 6,
   NUM_OUTPUTS: 3,
   NUMBER_GENERATIONS: 32,
-  EXCESS_COEFFICIENT: 8,
-  DISJOINT_COEFFICIENT: 8,
-  WEIGHT_DIFF_COEFFICIENT: 0.4,
+  EXCESS_COEFFICIENT: 1,
+  DISJOINT_COEFFICIENT: 1,
+  WEIGHT_DIFF_COEFFICIENT: 0.3,
   SPECIES_COMPATIBILITY_THRESHOLD: 3,
   SPECIES_EXTINCTION_THRESHOLD: 3,
   SPECIES_CULL_RATE: 0.20,
@@ -113,8 +122,8 @@ module.exports = {
   MUTATION_RATE: {
     WEIGHT: 0.8,
     WEIGHT_PERTURB: 0.9,
-    NEW_NODE: 0.05,
-    NEW_CONNECTION: 0.09 
+    NEW_NODE: 0.03,
+    NEW_CONNECTION: 0.05 
   },
   ALPHA: 'abcdefghijklmnopqrst',
   getRandom,
@@ -126,5 +135,6 @@ module.exports = {
   modifiedSigmoid,
   distanceNormalizer,
   sleep,
+  uuidv4,
   GameOver
 };

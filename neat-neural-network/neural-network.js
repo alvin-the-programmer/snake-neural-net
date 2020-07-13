@@ -41,6 +41,11 @@ class NeuralNetwork {
     }
   }
 
+  static fromJSON(data) {
+    const { nodes, connections } = JSON.parse(data);
+    return new NeuralNetwork(nodes, connections);
+  }
+
   activate(inputActivations) {
     const readyToActivate = [];
     const activation = {};
