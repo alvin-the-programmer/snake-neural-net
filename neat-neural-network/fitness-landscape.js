@@ -37,7 +37,7 @@ class FitnessLandscape {
     } 
 
     if (game.foodScore >= LOG_FITNESS_THRESHOLD) {
-      const speciesId = `./logs/${game.foodScore}-${uuidv4()}.json`;
+      const speciesId = `./logs/new-${game.foodScore}-${uuidv4()}.json`;
       const neuralNetData = JSON.stringify(this.neuralNetwork);
       fs.writeFile(speciesId, neuralNetData, {flag: 'w'}, (err) => {
         if (err) throw err;
@@ -61,7 +61,7 @@ class FitnessLandscape {
       try {
         game.simulate();
         game.draw();
-        await sleep(15);
+        await sleep(30);
       } catch (error) {
         if (error instanceof GameOver) {
           console.log('GAME OVER!');
