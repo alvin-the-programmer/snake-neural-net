@@ -4,16 +4,18 @@ const {
   WEIGHT_DIFF_COEFFICIENT,
   MUTATION_RATE,
   PERTURB_WEIGHT_DELTA,
-  INHERIT_DISABLED_GENE_RATE,
+  INHERIT_DISABLED_GENE_RATE
+} = require('../constants');
+
+const { 
   getRandom,
   getRandomElement,
   randomChance,
-} = require('../constants');
+} = require('../util');
 
 const NeuralNetwork = require('./neural-network');
 const FitnessLandscape = require('./fitness-landscape');
 
-// TODO track duplicate innovation on generation
 class Genome {
   static innovationNumber = 0;
 

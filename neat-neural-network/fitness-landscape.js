@@ -1,12 +1,15 @@
 const { 
   OUTPUT_NODE_MAP,
-  LOG_FITNESS_THRESHOLD,
-  GameOver,
-  sleep,
-  uuidv4,
+  LOG_SPECIMEN,
+  LOG_SPECIMEN_FITNESS_THRESHOLD,
+  ANIMATION_FRAME_DELAY,
+  GameOver
 } = require('../constants');
 
+const { sleep, uuidv4 } = require('../util');
+
 const SnakeGame = require('../snake-game');
+
 const fs = require('fs');
 
 class FitnessLandscape {
@@ -36,7 +39,7 @@ class FitnessLandscape {
       }
     } 
 
-    if (game.foodScore >= LOG_FITNESS_THRESHOLD) {
+    if (LOG_SPECIMEN && game.foodScore >= LOG_SPECIMEN_FITNESS_THRESHOLD) {
       const speciesId = `./logs/new-${game.foodScore}-${uuidv4()}.json`;
       const neuralNetData = JSON.stringify(this.neuralNetwork);
       fs.writeFile(speciesId, neuralNetData, {flag: 'w'}, (err) => {
@@ -61,7 +64,7 @@ class FitnessLandscape {
       try {
         game.simulate();
         game.draw();
-        await sleep(30);
+        await sleep(ANIMATION_FRAME_DELAY);
       } catch (error) {
         if (error instanceof GameOver) {
           console.log('GAME OVER!');
@@ -71,6 +74,7 @@ class FitnessLandscape {
         }
       }
     } 
+
     console.log({ 
       nodes: this.neuralNetwork.nodes,
       connections: this.neuralNetwork.connections,

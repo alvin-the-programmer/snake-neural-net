@@ -2,16 +2,15 @@ const {
   WIDTH, 
   HEIGHT,
   DIRECTION,
-  ALPHA, 
   SNAKE_START_POS, 
   START_HEALTH,
   MAX_HEALTH,
   MAX_FITNESS,
-  SNAKE_ORIENTATION_SYMBOL,
-  makeGetSeededRandomInt,
   distanceNormalizer,
   GameOver,
 } = require('../constants');
+
+const { makeGetSeededRandomInt } = require('../util');
 
 const Snake = require('./Snake');
 
@@ -156,11 +155,12 @@ class SnakeGame {
     console.clear();
     this.fillGrid();
 
-    let colHeader = ' ';
-    this.grid[0].forEach((col, colIndex) => {
-      colHeader += ALPHA[colIndex] + ' ';
-    });
-    console.log(colHeader);
+    const SNAKE_ORIENTATION_SYMBOL = {
+      0: '↑',
+      90: '→',
+      180: '↓',
+      270: '←'
+    };
 
     this.snake.positions.forEach(([row, col], i) => {
       if (i === 0) {
@@ -174,7 +174,7 @@ class SnakeGame {
     this.grid[foodRow][foodCol] = '●';
 
     this.grid.forEach((row, rowIndex) => {
-      console.log(ALPHA[rowIndex] + row.join('|'));
+      console.log(row.join('|'));
     });
 
     console.log('health:', this.health + '/' + MAX_HEALTH);

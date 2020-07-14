@@ -1,9 +1,4 @@
-const { 
-  sigmoid,
-  modifiedSigmoid
-} = require('../constants');
-
-// TODO what happens if there is a cycle?
+const { modifiedSigmoid } = require('../constants');
 
 class NeuralNetwork {
   constructor ({ input, hidden, output }, connections) {
@@ -101,7 +96,5 @@ class NeuralNetwork {
     return maxNode;
   }
 }
-
-// console.log(NeuralNetwork.makeRandomSimpleNetwork(4, 4));
 
 module.exports = NeuralNetwork;

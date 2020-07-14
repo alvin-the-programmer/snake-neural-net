@@ -1,10 +1,13 @@
 const { 
   SPECIES_COMPATIBILITY_THRESHOLD, 
   CROSSOVER_RATE,
-  MUTATION_RATE,
+  MUTATION_RATE
+} = require('../constants');
+
+const {
   getRandomElement, 
   randomChance 
-} = require('../constants');
+} = require('../util');
 
 const Genome = require('./genome');
 

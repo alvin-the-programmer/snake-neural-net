@@ -4,9 +4,10 @@ const {
   POPULATION_SIZE,
   SPECIES_EXTINCTION_THRESHOLD,
   SPECIES_CULL_RATE,
-  MAX_FITNESS,
-  sleep
+  MAX_FITNESS
 } = require('../constants');
+
+const { sleep } = require('../util');
 
 const Genome = require('./genome');
 const Species = require('./species');
