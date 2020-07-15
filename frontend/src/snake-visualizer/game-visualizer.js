@@ -31,7 +31,6 @@ const GameVisualizer = (props) => {
   return <table style={{border: '2px solid black', margin: '6px'}}>
     <tbody>
       {board}
-
     </tbody>
   </table>
 };

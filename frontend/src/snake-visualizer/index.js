@@ -51,15 +51,21 @@ class SnakeVisualizer extends React.Component {
       activations: testActivations,
     };
 
-    this.animationInterval = setInterval(this.stepAnimation, 20);
+    this.animationInterval = setInterval(this.stepAnimation, 30);
   }
 
   stepAnimation = () => {
    const frame = this.fitnessLandscape.step();
 
    if (!frame) {
-     clearInterval(this.animationInterval);
-     return;
+    clearInterval(this.animationInterval);
+    
+    setTimeout(() => {
+      this.fitnessLandscape = new FitnessLandscape(this.props.network);
+      this.animationInterval = setInterval(this.stepAnimation, 30);
+    }, 3000);
+
+    return;
    }
 
    const { grid, activations } = frame;
@@ -70,7 +76,7 @@ class SnakeVisualizer extends React.Component {
     return <>
       <GameVisualizer grid={this.state.grid} />
       <NetVisualizer network={this.props.network} activations={this.state.activations} />
-    </>;
+    </>; 
   }
 }
 
