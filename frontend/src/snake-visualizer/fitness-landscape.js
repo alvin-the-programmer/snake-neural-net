@@ -3,7 +3,7 @@ import {
   modifiedSigmoid 
 } from './util';
 
-import SnakeGame from './snake-game';
+import SnakeGame from './game';
 
 class FitnessLandscape {
   constructor(network) {
@@ -152,4 +152,4 @@ class NeuralNetwork {
   }
 }
 
-module.exports = FitnessLandscape;
+export default FitnessLandscape;

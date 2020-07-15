@@ -5,6 +5,9 @@ import {
   DIRECTION
  } from './util';
 
+const HEIGHT = 20;
+const WIDTH = 20;
+
 class SnakeGame {
   constructor() {
     this.grid = new Array(20).fill().map(() => new Array(20));
@@ -209,9 +212,6 @@ class Snake {
     this.positions.unshift(newHeadPos); 
       
     if (String(newHeadPos) === String(foodPos)) {
-      if (!SNAKE_GROW)
-        this.positions.pop();
-
       return true;
     } else {
       this.positions.pop();
