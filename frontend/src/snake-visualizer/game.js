@@ -1,7 +1,8 @@
 import { 
   getRandomElement,
   distanceNormalizer,
-  GameOver
+  GameOver,
+  DIRECTION
  } from './util';
 
 class SnakeGame {
@@ -148,11 +149,8 @@ class SnakeGame {
   }
 
   simulate() {
-    this.health--;
-
     if (this.snake.move(this.foodPos)) {
       this.foodScore++;
-      this.health = Math.min(this.health + 51, MAX_HEALTH);
       this.placeRandomFood();
     }
   }

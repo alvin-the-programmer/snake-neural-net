@@ -21,6 +21,19 @@ class GameOver extends Error {
   }
 }
 
+const DIRECTION = {
+  STRAIGHT: 'straight',
+  TURN_LEFT: 'turnLeft',
+  TURN_RIGHT: 'turnRight'
+};
+
+const OUTPUT_NODE_MAP = {
+  7: DIRECTION.STRAIGHT,
+  8: DIRECTION.TURN_LEFT,
+  9: DIRECTION.TURN_RIGHT
+};
+
+
 module.exports = {
   getRandom,
   getRandomInt,
@@ -28,5 +41,7 @@ module.exports = {
   modifiedSigmoid,
   distanceNormalizer,
   sleep,
-  GameOver
+  GameOver,
+  DIRECTION,
+  OUTPUT_NODE_MAP
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import NetVisualizer from './net-visualizer';
 import GameVisualizer from './game-visualizer';
@@ -22,7 +22,7 @@ const testGrid = [
   [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'F', ' ', ' ', ' ', ' ', 'F', ' ', ' ', ' ', ' ', ' ', ' '],
   [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
   [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
-  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'F', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
   [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '],
 ];
 
@@ -67,10 +67,15 @@ const testActivations = {
 };
 
 const SnakeVisualizer = (props) => {
+  const [ grid, setGrid ] = useState(testGrid);
+  const [ network, setNetwork ] = useState(testNetwork);
+  const [ activations, setActivations ] = useState(testActivations);
+
   return <>
-    <GameVisualizer grid={testGrid}/>
-    <NetVisualizer network={testNetwork} activations={testActivations}/>
+    <GameVisualizer grid={grid}/>
+    <NetVisualizer network={network} activations={activations}/>
   </>;
 };
+
 
 export default SnakeVisualizer;
