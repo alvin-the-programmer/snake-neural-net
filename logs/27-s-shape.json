@@ -1,1 +1,27 @@
-{"nodes":{"input":[1,2,3,4,5,6],"hidden":[10,11,12,13,14],"output":[7,8,9]},"connections":{"1,8":{"weight":0.6900237365625799,"enabled":true},"2,9":{"weight":-0.31323119532316923,"enabled":true},"6,8":{"weight":-0.39657297264784575,"enabled":true},"5,9":{"weight":0.14093188988044858,"enabled":true},"6,7":{"weight":-0.09010491380468011,"enabled":true},"6,9":{"weight":-0.22406696109101176,"enabled":true},"4,9":{"weight":0.9315275065600872,"enabled":true},"4,8":{"weight":-0.9855111902579665,"enabled":true},"3,7":{"weight":-0.09211225248873234,"enabled":true},"3,8":{"weight":-0.9302446222864091,"enabled":true},"4,7":{"weight":0.677533432841301,"enabled":true},"1,9":{"weight":-0.35539278853684664,"enabled":true},"3,9":{"weight":-0.16689984686672688,"enabled":true},"1,7":{"weight":0.03189468802884221,"enabled":true},"5,7":{"weight":0.02903409954160452,"enabled":true},"5,8":{"weight":-0.023339278995990753,"enabled":true},"2,7":{"weight":0.8889646232128143,"enabled":true},"2,8":{"weight":0.039605602622032166,"enabled":true},"6,5":{"weight":0.27145857736468315,"enabled":true},"10,3":{"weight":-0.588816475123167,"enabled":true},"2,1":{"weight":0.406360249966383,"enabled":true},"8,10":{"weight":0.6112162293866277,"enabled":true}},"inputMap":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{},"7":{},"8":{},"9":{},"10":{},"11":{},"12":{},"13":{},"14":{}},"outputMap":{"1":{},"2":{},"3":{},"4":{},"5":{},"6":{},"7":{},"8":{},"9":{},"10":{},"11":{},"12":{},"13":{},"14":{}}}
+{
+  "nodes": { "input": [1, 2, 3, 4, 5, 6], "hidden": [10, 11, 12, 13, 14], "output": [7, 8, 9] },
+  "connections": {
+    "1,8": { "weight": 0.6900237365625799, "enabled": true },
+    "2,9": { "weight": -0.31323119532316923, "enabled": true },
+    "6,8": { "weight": -0.39657297264784575, "enabled": true },
+    "5,9": { "weight": 0.14093188988044858, "enabled": true },
+    "6,7": { "weight": -0.09010491380468011, "enabled": true },
+    "6,9": { "weight": -0.22406696109101176, "enabled": true },
+    "4,9": { "weight": 0.9315275065600872, "enabled": true },
+    "4,8": { "weight": -0.9855111902579665, "enabled": true },
+    "3,7": { "weight": -0.09211225248873234, "enabled": true },
+    "3,8": { "weight": -0.9302446222864091, "enabled": true },
+    "4,7": { "weight": 0.677533432841301, "enabled": true },
+    "1,9": { "weight": -0.35539278853684664, "enabled": true },
+    "3,9": { "weight": -0.16689984686672688, "enabled": true },
+    "1,7": { "weight": 0.03189468802884221, "enabled": true },
+    "5,7": { "weight": 0.02903409954160452, "enabled": true },
+    "5,8": { "weight": -0.023339278995990753, "enabled": true },
+    "2,7": { "weight": 0.8889646232128143, "enabled": true },
+    "2,8": { "weight": 0.039605602622032166, "enabled": true },
+    "6,5": { "weight": 0.27145857736468315, "enabled": true },
+    "10,3": { "weight": -0.588816475123167, "enabled": true },
+    "2,1": { "weight": 0.406360249966383, "enabled": true },
+    "8,10": { "weight": 0.6112162293866277, "enabled": true }
+  }
+}
