@@ -4,6 +4,7 @@ class GameOver extends Error {
     this.name = 'GameOver';
   }
 }
+
 const sigmoid = x => 1 / (1 + Math.E**(-x));
 
 const modifiedSigmoid = x => 1 / (1 + Math.E**(-4.9 * x));

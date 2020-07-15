@@ -16,7 +16,6 @@ class Snake {
     this.angle = 0;
   };
 
-
   turnLeft() {
     this.angle = this.angle - 90;
     if (this.angle < 0)
