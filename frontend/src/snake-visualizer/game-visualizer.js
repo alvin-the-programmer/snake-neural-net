@@ -9,17 +9,17 @@ const GameVisualizer = (props) => {
           const style = {
             width: '18px', 
             height: '18px', 
-            // border: '1px solid black'
+            border: '2px solid #333333'
           };
 
           if (val === 'S') {
-            style.backgroundColor = 'blue';
+            style.backgroundColor = '#4E937A';
           } else if (val === 'H') {
-            style.backgroundColor = 'purple';
+            style.backgroundColor = '#C7F2A7';
           } else if (val === 'F') {
-            style.backgroundColor = 'green';
+            style.backgroundColor = '#B4656F';
           } else {
-            style.backgroundColor = 'white'
+            style.backgroundColor = '#333333'
           }
 
           return <td key={valIdx} style={style}></td>
@@ -28,7 +28,7 @@ const GameVisualizer = (props) => {
     </tr>
   });
 
-  return <table style={{border: '2px solid black', margin: '6px'}}>
+  return <table style={{margin: '6px', borderCollapse: 'collapse'}}>
     <tbody>
       {board}
     </tbody>
