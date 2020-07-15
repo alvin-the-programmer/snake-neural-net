@@ -50,16 +50,24 @@ class SnakeVisualizer extends React.Component {
       grid: testGrid,
       activations: testActivations,
     };
+
+    this.animationInterval = setInterval(this.stepAnimation, 20);
   }
 
-  handleClick = () => {
-   const { grid, activations } = this.fitnessLandscape.step();
+  stepAnimation = () => {
+   const frame = this.fitnessLandscape.step();
+
+   if (!frame) {
+     clearInterval(this.animationInterval);
+     return;
+   }
+
+   const { grid, activations } = frame;
    this.setState({ grid, activations });
   };
 
   render() {
     return <>
-      <button onClick={this.handleClick}>step simulation</button>
       <GameVisualizer grid={this.state.grid} />
       <NetVisualizer network={this.props.network} activations={this.state.activations} />
     </>;

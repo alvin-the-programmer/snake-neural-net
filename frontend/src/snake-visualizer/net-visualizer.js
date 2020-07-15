@@ -44,7 +44,11 @@ const NetVisualizer = (props) => {
         sortMethod: 'directed'
       }
     },
-    height: "500px"
+    height: "500px",
+    width: "500px",
+    physics: {
+      enabled: false
+    }
   };
 
   return (

@@ -1,6 +1,7 @@
 import { 
   OUTPUT_NODE_MAP, 
-  modifiedSigmoid 
+  modifiedSigmoid ,
+  GameOver
 } from './util';
 
 import SnakeGame from './game';
@@ -11,44 +12,26 @@ class FitnessLandscape {
     this.game = new SnakeGame();
   }
 
-  // async animate() {
-  //   const game = new SnakeGame();
-
-  //   while (true) {
-  //     const inputs = {};
-  //     const state = game.getNeuralNetInputState();
-  //     this.neuralNetwork.nodes.input.forEach((node, i) => inputs[node] = state[i]);
-  //     const outputNode = this.neuralNetwork.getOutput(inputs);
-  //     const direction = OUTPUT_NODE_MAP[outputNode];
-  //     game.input(direction);
-
-  //     try {
-  //       game.simulate();
-  //       game.draw();
-  //       await sleep(ANIMATION_FRAME_DELAY);
-  //     } catch (error) {
-  //       if (error instanceof GameOver) {
-  //         console.log('GAME OVER!');
-  //         break;
-  //       } else {
-  //         throw error;
-  //       }
-  //     }
-  //   } 
-  // }
-
   step() {
     const inputs = {};
     const state = this.game.getNeuralNetInputState();
     this.neuralNetwork.nodes.input.forEach((node, i) => inputs[node] = state[i]);
     const { output, activations } = this.neuralNetwork.getOutput(inputs);
     const direction = OUTPUT_NODE_MAP[output];
-    this.game.input(direction);
-    this.game.simulate();
-    return {
-      grid: this.game.draw(),
-      activations
-    };
+    try {
+      this.game.input(direction);
+      this.game.simulate();
+      return {
+        grid: this.game.draw(),
+        activations
+      };
+    } catch (error) {
+      if (error instanceof GameOver) {
+        return null;
+      } else {
+        throw error;
+      }
+    }
   }
 }
 
