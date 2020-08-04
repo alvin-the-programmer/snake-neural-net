@@ -7,8 +7,8 @@ const GameVisualizer = (props) => {
       {
         row.map((val, valIdx) => {
           const style = {
-            width: '18px', 
-            height: '18px', 
+            width: '16px', 
+            height: '16px', 
             border: '2px solid #333333'
           };
 
@@ -21,14 +21,13 @@ const GameVisualizer = (props) => {
           } else {
             style.backgroundColor = '#333333'
           }
-
           return <td key={valIdx} style={style}></td>
         })
       }
     </tr>
   });
 
-  return <table style={{margin: '6px', borderCollapse: 'collapse'}}>
+  return <table style={{borderCollapse: 'collapse'}}>
     <tbody>
       {board}
     </tbody>

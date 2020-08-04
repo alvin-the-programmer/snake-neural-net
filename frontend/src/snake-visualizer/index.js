@@ -74,8 +74,10 @@ class SnakeVisualizer extends React.Component {
 
   render() {
     return <>
-      <GameVisualizer grid={this.state.grid} />
-      <NetVisualizer network={this.props.network} activations={this.state.activations} />
+      <div style={{display: 'flex', margin: '10px'}}>
+        <GameVisualizer grid={this.state.grid}/>
+        <NetVisualizer network={this.props.network} activations={this.state.activations} />
+      </div>
     </>; 
   }
 }

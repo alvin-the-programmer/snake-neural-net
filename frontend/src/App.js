@@ -11,7 +11,6 @@ const App = () => {
     <SnakeVisualizer network={looperNetwork} />
     <SnakeVisualizer network={zigZagNetwork} />
     <SnakeVisualizer network={contractorNetwork} />
-    <SnakeVisualizer network={sShapeNetwork} />
   </>;
 }
 
